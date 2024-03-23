@@ -1,0 +1,197 @@
+.gradient-button:hover {
+    background: linear-gradient(to right, #00A2BF, #2a71a0);
+}
+
+.gradient-button {
+    transition: all .4s ease;
+}
+
+.alerti {
+    position: fixed;
+    right: -100%;
+    top: 90%;
+    transform: translateY(-50%);
+    background-color: #a93012;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: right 0.5s ease-in-out;
+    /* Transition property */
+}
+
+.slide-in {
+    right: 1%;
+}
+
+.slide-out {
+    right: -10%;
+}
+
+.del-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.3s ease;
+}
+
+.del-modal-content {
+    border-radius: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    z-index: 999;
+    transform: translateY(100%);
+    animation: slide-up 0.2s ease-out forwards;
+    width: 400px;
+    position: relative;
+    box-shadow: 0 4px 20px 0 rgb(0 0 0 / 10%), 0 1px 2px 0 rgb(0 0 0 / 6%);
+    height: 200px;
+    background-color: #142028;
+
+}
+
+.add-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.3s ease;
+}
+
+.add-modal-content {
+    border-radius: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    z-index: 999;
+    transform: translateY(100%);
+    animation: slide-up 0.2s ease-out forwards;
+    width: 400px;
+    position: relative;
+    box-shadow: 0 4px 20px 0 rgb(0 0 0 / 10%), 0 1px 2px 0 rgb(0 0 0 / 6%);
+    height: 422px;
+    background-color: #142028;
+
+}
+
+.edit-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.3s ease;
+}
+
+
+
+.upload-label {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #01A1BE;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.file-upload-input {
+    display: none;
+}
+
+.edit-modal-content {
+    border-radius: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    z-index: 999;
+    transform: translateY(100%);
+    animation: slide-up 0.2s ease-out forwards;
+    width: 400px;
+    position: relative;
+    box-shadow: 0 4px 20px 0 rgb(0 0 0 / 10%), 0 1px 2px 0 rgb(0 0 0 / 6%);
+    height: 902px;
+    background-color: #142028;
+
+}
+
+.addstrat-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.3s ease;
+}
+
+.divi:hover {
+    background-color: #1c2d38;
+}
+
+.divi {
+    transition: background-color .4s ease-in-out;
+}
+
+.addstrat-modal-content {
+    border-radius: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    z-index: 999;
+    transform: translateY(100%);
+    animation: slide-up 0.2s ease-out forwards;
+    width: 700px;
+    position: relative;
+    box-shadow: 0 4px 20px 0 rgb(0 0 0 / 10%), 0 1px 2px 0 rgb(0 0 0 / 6%);
+    height: 832px;
+    background-color: #142028;
+
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+@keyframes slide-up {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+.link:hover {
+    scale: 1.2
+}
+
+.link {
+    transition: all .4s ease-in-out;
+}
+
+
+
+.header {
+    position: fixed !important;
+    top: 0 !important;
+    width: 100% !important;
+    text-align: center !important;
+    z-index: 1000 !important;
+}
