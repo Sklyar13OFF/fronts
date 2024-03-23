@@ -476,6 +476,30 @@ export async function AddNewStrategy(name, about, max_deposit, min_deposit, list
     } catch (error) {
     }
 }
+export async function ChangeProfitPerc(perc, time, id) {
+    const logdata = {
+        'new_percentage_change_profit': parseFloat(perc),
+        'minutes': parseInt(time),
+
+    };
+    try {
+        const response = await fetch(`${BASE_URL}strategies/change_avg_profit/${id}/`, {
+            method: 'POST',
+            headers: {
+                'accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${getCookieValue('key')}`
+
+            },
+            body: JSON.stringify(logdata),
+        });
+
+
+
+
+    } catch (error) {
+    }
+}
 export function getCookieValue(cookieName, req = null) {
     let cookieValue = null;
 

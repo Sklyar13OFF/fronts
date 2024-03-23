@@ -71,7 +71,7 @@ export default function CopyTrading() {
                         <AddTraderModal />
                         <div className="bg-[#142028] overflow-y-auto w-full h-full rounded-b-xl shadow-lg flex flex-col">
                             {tradersList.map((trader) => (
-                                <TraderModal id={trader.id} nickname={trader.nickname} about={trader.about} register={trader.date_of_registration} photo={trader.photo} folCount={trader.followers_count} avg_profit={trader.avg_profit_strategies} strategies={trader.strategies} />
+                                <TraderModal key={trader.id} copierscount={trader.copiers_count} id={trader.id} nickname={trader.nickname} about={trader.about} register={trader.date_of_registration} photo={trader.photo} folCount={trader.followers_count} avg_profit={trader.avg_profit_strategies} strategies={trader.strategies} />
                             ))}
                         </div>
                     </div>
@@ -79,7 +79,7 @@ export default function CopyTrading() {
                         <AddStrategyModal />
                         <div className="bg-[#142028] w-full h-full rounded-b-xl overflow-y-auto shadow-lg flex flex-col">
                             {strategiesList.map((strategy) => (
-                                <StrategyModal current_copiers={strategy.total_copiers} maxCopiers={strategy.max_users} name={strategy.name} about={strategy.about} crypto={strategy.cryptos} minDepo={strategy.min_deposit} maxDepo={strategy.max_deposit} id={strategy.id} selected={(strategy.cryptos).map(crypto => crypto.name)} />
+                                <StrategyModal key={strategy.id} current_copiers={strategy.total_copiers} maxCopiers={strategy.max_users} name={strategy.name} about={strategy.about} crypto={strategy.cryptos} minDepo={strategy.min_deposit} maxDepo={strategy.max_deposit} id={strategy.id} avg_profit={strategy.avg_profit} selected={(strategy.cryptos).map(crypto => crypto.name)} />
                             ))}
                         </div>
                     </div>

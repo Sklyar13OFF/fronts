@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { DelStrategy } from "../../api/ApiWrapper";
 import Image from "next/image";
 import { EditStrategy } from "../../api/ApiWrapper";
+import ChangeProfitModal from "./ChangeProfitModal";
 import { listCrypto } from "../../api/ApiWrapper";
-export default function StrategyModal({ current_copiers, name, minDepo, maxDepo, about, id, crypto, selected, maxCopiers }) {
+export default function StrategyModal({ current_copiers, name, minDepo, maxDepo, about, id, crypto, selected, maxCopiers, avg_profit }) {
     const [isOpen, setIsOpen] = useState(false);
     const [minDepos, setminDepos] = useState(minDepo);
     const [maxDepos, setmaxDepos] = useState(maxDepo);
@@ -120,6 +121,9 @@ export default function StrategyModal({ current_copiers, name, minDepo, maxDepo,
                                             <label className='text-white text-sm'>About</label>
                                             <textarea style={{ resize: 'none' }} onChange={(event) => setAbouts(event.target.value)} className='bg-[#0B1217] py-2 px-3 text-white text-sm rounded-lg shadow-lg outline-none w-[350px] h-[80px]' type='password' required >{abouts}</textarea>
                                         </div>
+                                        <ChangeProfitModal profit={avg_profit} id={id} />
+                                    </div>
+                                    <div className="flex flex-col gap-1">
                                         <div className="flex flex-col gap-1 items-start">
                                             <input
                                                 type="text"
@@ -137,11 +141,9 @@ export default function StrategyModal({ current_copiers, name, minDepo, maxDepo,
                                                 ))}
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className="flex flex-col gap-1">
                                         <div className="flex flex-col items-start gap-1">
                                             <label className='text-white text-sm'>Selected cryptos</label>
-                                            <div className="h-[500px] w-[300px] bg-[#0B1217] rounded-lg overflow-y-auto">
+                                            <div className="h-[300px] w-[300px] bg-[#0B1217] rounded-lg overflow-y-auto">
                                                 {depositAmounts.map((item, index) => (
                                                     <div key={index} className="flex items-center h-[60px] px-5 justify-between border-b border-white">
                                                         <div className="flex gap-1">

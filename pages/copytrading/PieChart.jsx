@@ -5,9 +5,13 @@ import 'chartjs-plugin-datalabels'; // Import the datalabels plugin
 Chart.register(ArcElement);
 
 const PieChart = ({ data }) => {
+    if (!data) {
+        // Handle case where data is null or undefined
+        return null;
+    }
+
     const labels = Object.keys(data);
     const percentages = Object.values(data);
-    console.log(labels)
 
     // Generate shades of blue
     const generateRandomBlueShade = () => {

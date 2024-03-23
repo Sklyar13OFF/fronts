@@ -37,7 +37,7 @@ export default function Users() {
                 />
                 <div className='bg-[#142028] w-[300px] h-[400px] rounded-b-lg flex flex-col'>
                     {filteredUsersList.map((item, index) => (
-                        <UserModal username={item.username} email={item.email} balance={item.wallet} date={new Date(item.date_of_registration).toLocaleDateString()} />
+                        <UserModal key={index} username={item.username} email={item.email} balance={item.wallet} date={new Date(item.date_of_registration).toLocaleDateString()} />
                     ))}
                 </div>
             </div>
