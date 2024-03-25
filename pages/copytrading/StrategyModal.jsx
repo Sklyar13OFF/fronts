@@ -4,7 +4,7 @@ import Image from "next/image";
 import { EditStrategy } from "../../api/ApiWrapper";
 import ChangeProfitModal from "./ChangeProfitModal";
 import { listCrypto } from "../../api/ApiWrapper";
-export default function StrategyModal({ custom, current_copiers, name, minDepo, maxDepo, about, id, crypto, selected, maxCopiers, avg_profit }) {
+export default function StrategyModal({ depos, custom, current_copiers, name, minDepo, maxDepo, about, id, crypto, selected, maxCopiers, avg_profit }) {
     const [isOpen, setIsOpen] = useState(false);
     const [minDepos, setminDepos] = useState(minDepo);
     const [maxDepos, setmaxDepos] = useState(maxDepo);
@@ -78,8 +78,12 @@ export default function StrategyModal({ custom, current_copiers, name, minDepo, 
                     <div className={`editstrat-modal-content`}>
                         <div className="flex flex-col w-full items-start gap-8 p-6">
 
-                            <div className="flex items-center gap-[520px]">
-                                <span className='text-2xl text-white font-bold'>Edit strategy</span>
+                            <div className="flex items-center gap-[270px]">
+                                <div className="flex items-center gap-20 ">
+                                    <span className='text-2xl text-white font-bold'>Edit strategy</span>
+
+                                    <span className='text-2xl text-white font-bold'>Deposited: {depos} USDT</span>
+                                </div>
                                 <Image className="cursor-pointer" onClick={() => setIsDelOpen(true)} width={26} height={26} src="/assets/icons/delete.svg" alt="" />
                                 {isDelOpen && (
                                     <div className={`del-modal-overlay`}>

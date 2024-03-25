@@ -70,10 +70,8 @@ export default function TraderModal({ nickname, about, register, id, strategies,
                                         <div className='flex gap-1 items-start flex-col'>
 
                                             <label className='text-white text-sm' required>Avatar</label>
-                                            <Image
-                                                className='rounded-xl'
-                                                width={60}
-                                                height={60}
+                                            <img
+                                                className='w-[60px] h-[60px] rounded-xl'
                                                 src={photo}
                                                 alt=""
                                             />

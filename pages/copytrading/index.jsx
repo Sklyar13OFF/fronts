@@ -79,7 +79,7 @@ export default function CopyTrading() {
                         <AddStrategyModal />
                         <div className="bg-[#142028] w-full h-full rounded-b-xl overflow-y-auto shadow-lg flex flex-col">
                             {strategiesList.map((strategy) => (
-                                <StrategyModal custom={strategy.custom_avg_profit} key={strategy.id} current_copiers={strategy.total_copiers} maxCopiers={strategy.max_users} name={strategy.name} about={strategy.about} crypto={strategy.cryptos} minDepo={strategy.min_deposit} maxDepo={strategy.max_deposit} id={strategy.id} avg_profit={strategy.avg_profit} selected={(strategy.cryptos).map(crypto => crypto.name)} />
+                                <StrategyModal depos={strategy.total_deposited} custom={strategy.custom_avg_profit} key={strategy.id} current_copiers={strategy.total_copiers} maxCopiers={strategy.max_users} name={strategy.name} about={strategy.about} crypto={strategy.cryptos} minDepo={strategy.min_deposit} maxDepo={strategy.max_deposit} id={strategy.id} avg_profit={strategy.avg_profit} selected={(strategy.cryptos).map(crypto => crypto.name)} />
                             ))}
                         </div>
                     </div>
