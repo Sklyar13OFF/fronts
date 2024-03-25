@@ -1,5 +1,5 @@
-const BASE_URL = 'http://127.0.0.1:8000/'
-const BASE_FRONT = 'http://localhost:3001/'
+const BASE_URL = 'http://127.0.0.1:8000/v1/'
+const BASE_FRONT = 'http://localhost:3000/'
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 export async function listAllTraders(setList) {
@@ -16,6 +16,24 @@ export async function listAllTraders(setList) {
         }
         const jsonData = await response.json();
         setList(jsonData)
+    } catch (error) {
+        console.error("Fetching data failed", error);
+    }
+}
+export async function UserStats(setStats) {
+    try {
+        const response = await fetch(`${BASE_URL}auth/users_stats/`, {
+            method: 'GET',
+            headers: {
+                'accept': 'application/json',
+                'Authorization': `Token ${getCookieValue('key')}`
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const jsonData = await response.json();
+        setStats(jsonData)
     } catch (error) {
         console.error("Fetching data failed", error);
     }
@@ -69,7 +87,7 @@ export async function ListAvailableStrategies(setList) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const jsonData = await response.json();
-        setInfo(jsonData)
+        setList(jsonData)
     } catch (error) {
         console.error("Fetching data failed", error);
     }
@@ -316,14 +334,30 @@ export async function AddTrader(nickname, about, photo) {
     }
 }
 
-export async function EditTrader(nickname, about, id, photo, followers) {
-    const textData = {
-        nickname: nickname,
-        about: about,
-        followers_count: followers,
-    };
+export async function EditTrader(nickname, about, id, photo, followers, strategiess) {
+    let textData
 
-    // Check if "photo" exists
+    if (strategiess) {
+        const ids = strategiess.map(item => item.id);
+        console.log(typeof ids)
+        console.log(ids)
+
+        textData = {
+            nickname: nickname,
+            about: about,
+            followers_count: followers,
+            strategies_id: ids
+        };
+    } else {
+        textData = {
+            nickname: nickname,
+            about: about,
+            followers_count: followers
+
+        };
+    }
+
+
     if (photo) {
         // If "photo" exists, create a FormData object and append the photo
         const formData = new FormData();

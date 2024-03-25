@@ -56,7 +56,7 @@ const PieChart = ({ data }) => {
     };
 
     return (
-        <div className='flex flex-col gap-5'>
+        <div className='flex flex-col h-[500px] overflow-y-auto p-4 gap-5'>
             <h5 className='text-white text-center font-bold text-xl'>Assets in strategies ratio</h5>
             <Pie data={chartData} options={options} />
             <div>
