@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { DelStrategy } from "../../api/ApiWrapper";
+import ChartComponent from "./StrategiesChart";
 import Image from "next/image";
 import { EditStrategy } from "../../api/ApiWrapper";
 import ChangeProfitModal from "./ChangeProfitModal";
 import { listCrypto } from "../../api/ApiWrapper";
-export default function StrategyModal({ depos, custom, current_copiers, name, minDepo, maxDepo, about, id, crypto, selected, maxCopiers, avg_profit }) {
+export default function StrategyModal({ depos, custom, current_copiers, name, minDepo, maxDepo, about, id, crypto, selected, maxCopiers, avg_profit, profits }) {
     const [isOpen, setIsOpen] = useState(false);
     const [minDepos, setminDepos] = useState(minDepo);
     const [maxDepos, setmaxDepos] = useState(maxDepo);
@@ -66,9 +67,15 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
     return (
         <div>
             <div onClick={() => setIsOpen(true)} key={id} className="text-white divi flex flex-col p-5">
-                <div className="flex justify-between">
-                    <span className="text-white text-xl">{name}</span>
+                <div className="flex flex-col gap-2  p-2">
                     <span className="text-white text-xl">{current_copiers}/{maxCopiers}</span>
+                    <div className="flex item-center justify-center flex-col gap-3">
+                        <ChartComponent chartData={profits} />
+
+                        <p className="text-white text-center     text-xl">{name}</p>
+
+                    </div>
+
 
 
                 </div>
@@ -168,7 +175,7 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                                 </div>
                                 <div className='flex w-full justify-between mt-8'>
                                     <button onClick={() => setIsOpen(false)} className='text-white font-bold'>Close</button>
-                                    <button onClick={() => { EditStrategy(custom, name, about, maxDepo, minDepo, id, depositAmounts), setIsOpen(false) }} className='w-[470px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Edit</button>
+                                    <button onClick={() => EditStrategy(naming, abouts, maxDepos, minDepos, id, depositAmounts, copiers)} className='w-[470px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Edit</button>
                                 </div>
                             </div>
                         </div>

@@ -413,17 +413,35 @@ export async function EditTrader(nickname, about, id, photo, followers, strategi
 }
 
 
+export async function fetchIsAdmin(setIsAdm) {
+    try {
+        const response = await fetch(`${BASE_URL}auth/is_admin/`, {
+            method: 'GET',
+            headers: {
+                'accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${getCookieValue('key')}`
+            },
+        });
+        const data = await response.json();
 
-export async function EditStrategy(name, about, max_deposit, min_deposit, id, cryptos, copiers) {
+        setIsAdm(data.is_admin);
+    } catch (error) {
+        console.error('Error fetching isAdmin status:', error);
+
+    }
+}
+
+export async function EditStrategy(name, about, max_deposit, min_deposit, id, list, copiers) {
     const logdata = {
         "name": name,
-        "cryptos": cryptos,
         "about": about,
+        'cryptos': list,
         "max_deposit": max_deposit,
         "min_deposit": min_deposit,
         "max_users": copiers
     };
-
+    console.log(logdata)
     try {
         const response = await fetch(`${BASE_URL}strategies/${id}/`, {
 
@@ -463,6 +481,30 @@ export async function DelTrader(id) {
     } catch (error) {
     }
 }
+export async function CopyStrategy(id, amount) {
+    const logdata =
+    {
+        "value": amount
+    }
+    try {
+        const response = await fetch(`${BASE_URL}strategies/add/${id}/`, {
+            method: 'POST',
+            headers: {
+                'accept': '*/*',
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${getCookieValue('key')}`
+
+            },
+            body: JSON.stringify(logdata),
+
+        });
+
+
+
+
+    } catch (error) {
+    }
+}
 export async function DelStrategy(id) {
 
     try {
@@ -474,6 +516,7 @@ export async function DelStrategy(id) {
                 'Authorization': `Token ${getCookieValue('key')}`
 
             },
+
         });
 
 

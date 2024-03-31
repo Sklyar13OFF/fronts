@@ -114,7 +114,7 @@ export default function AddStrategyModal() {
                                 </div>
                                 <div className='flex w-full justify-between mt-4'>
                                     <button onClick={() => setIsOpen(false)} className='text-white font-bold'>Close</button>
-                                    <button onClick={() => { AddNewStrategy(name, about, maxDepo, minDepo, depositAmounts, maxCopiers), setIsOpen(false) }} className='w-[470px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Add</button>
+                                    <button onClick={() => { AddNewStrategy(name, about, maxDepo, minDepo, depositAmounts,), setIsOpen(false) }} className='w-[470px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Add</button>
                                 </div>
                             </div>
                         </div>
