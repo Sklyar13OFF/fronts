@@ -10,6 +10,7 @@ import { statsCopy } from "../../api/ApiWrapper";
 import { fetchIsAdmin } from "../../api/ApiWrapper";
 import AddTraderModal from "./AddTraderModal";
 import AddStrategyModal from "./AddStrategyModal";
+import { MyTraders } from "../../api/ApiWrapper";
 import PieChart from './PieChart';
 import { PieChartData } from "../../api/ApiWrapper";
 import { getServerSideProps as checkAuth } from '../../api/authCheck';
@@ -17,12 +18,14 @@ export const getServerSideProps = async (context) => {
     return checkAuth(context);
 };
 export default function CopyTrading() {
+    const [myInfo, setMyInfo] = useState({})
     const [tradersList, setTradersList] = useState([])
     const [pie, setPie] = useState({})
     const [isAdmin, setAdm] = useState(false);
     useEffect(() => {
         fetchIsAdmin(setAdm);
         PieChartData(setPie);
+        MyTraders(setMyInfo)
     }, []);
 
 
@@ -96,7 +99,7 @@ export default function CopyTrading() {
             ) : (< div className="flex flex-col w-full items-center h-[100vh] pt-[90px] bg-[#0B1217] justify-start" >
                 <div className="grid grid-cols-4 gap-10">
                     {tradersList.map((trader) => (
-                        <div className="w-[400px] h-[300px] flex flex-col  rounded-xl shadow-2xl p-5 bg-[#142028]">
+                        <div className={`${myInfo.includes(trader.id) ? 'bg-[#4e758f]' : 'bg-[#142028]'} w-[400px] h-[300px] flex flex-col  rounded-xl shadow-2xl p-5  bg-[#142028]`}>
                             <div className="flex justify-between items-start">
                                 <div className="flex gap-5 items-start">
                                     <img className="w-[60px] h-[60px]" src={trader.photo} alt="" />
