@@ -20,6 +20,24 @@ export async function listAllTraders(setList) {
         console.error("Fetching data failed", error);
     }
 }
+export async function listTraderTx(setTx, id) {
+    try {
+        const response = await fetch(`${BASE_URL}traders/${id}/transactions/`, {
+            method: 'GET',
+            headers: {
+                'accept': 'application/json',
+                'Authorization': `Token ${getCookieValue('key')}`
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const jsonData = await response.json();
+        setTx(jsonData)
+    } catch (error) {
+        console.error("Fetching data failed", error);
+    }
+}
 export async function MyInfo(setMyInfo) {
     try {
         const response = await fetch(`${BASE_URL}auth/users/me/`, {
@@ -468,8 +486,9 @@ export async function fetchIsAdmin(setIsAdm) {
     }
 }
 
-export async function EditStrategy(name, about, max_deposit, min_deposit, id, list, copiers) {
+export async function EditStrategy(copiersCount, name, about, max_deposit, min_deposit, id, list, copiers) {
     const logdata = {
+        'total_copiers': copiersCount,
         "name": name,
         "about": about,
         'cryptos': list,

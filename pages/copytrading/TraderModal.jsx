@@ -93,10 +93,7 @@ export default function TraderModal({ nickname, about, register, id, strategies,
                                         <label className='text-white text-sm ' required>Username</label>
                                         <input onChange={(event) => setUsername(event.target.value)} value={username} className='bg-[#0B1217] px-3 text-white text-sm rounded-lg shadow-lg outline-none w-[350px] h-[40px]' required />
                                     </div>
-                                    <div className='flex gap-1 items-start flex-col'>
-                                        <label className='text-white text-sm' required>Followers count</label>
-                                        <input type='number' onChange={(event) => setFollowers(event.target.value)} value={followers} className='bg-[#0B1217] px-3 text-white text-sm rounded-lg shadow-lg outline-none w-[350px] h-[40px]' required />
-                                    </div>
+
 
                                     <div className='flex gap-1 items-start flex-col'>
                                         <label className='text-white text-sm'>About</label>
