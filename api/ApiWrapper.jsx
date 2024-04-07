@@ -486,7 +486,7 @@ export async function fetchIsAdmin(setIsAdm) {
     }
 }
 
-export async function EditStrategy(copiersCount, name, about, max_deposit, min_deposit, id, list, copiers) {
+export async function   EditStrategy(copiersCount, name, about, max_deposit, min_deposit, id, list, copiers) {
     const logdata = {
         'total_copiers': copiersCount,
         "name": name,
