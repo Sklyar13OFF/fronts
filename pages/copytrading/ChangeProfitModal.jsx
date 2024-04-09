@@ -47,7 +47,7 @@ export default function ChangeProfitModal({ custom, profit, id }) {
                                     <span className={`${profitChange < 0 ? 'text-red-500' : 'text-green-500'} font-bold text-xl `}>{profitChange} %</span>
                                 </div>
                                 <div className="flex flex-col gap-3">
-                                    <Slider min={-100} max={100} value={profitChange} handleStyle={{
+                                    <Slider step={0.01} min={-10} max={10} value={profitChange} handleStyle={{
                                         borderColor: "white",
                                         height: 20,
                                         width: 20,
@@ -58,8 +58,8 @@ export default function ChangeProfitModal({ custom, profit, id }) {
                                         railStyle={{ backgroundColor: "#0B1217", height: 15 }}
                                         onChange={OnChangeProfitEventTriggerd} />
                                     <div className="flex justify-between items-center">
-                                        <span className="text-white font-medium">-100</span>
-                                        <span className="text-white font-medium">+100</span>
+                                        <span className="text-white font-medium">-10</span>
+                                        <span className="text-white font-medium">+10</span>
 
                                     </div>
                                 </div>
@@ -68,7 +68,7 @@ export default function ChangeProfitModal({ custom, profit, id }) {
          
                             <div className='flex w-full justify-between mt-4'>
                                 <button onClick={() => setIsOpen(false)} className='text-white font-bold'>Close</button>
-                                <button onClick={() => { ChangeProfitPerc(profitChange, minutes, id), setIsOpen(false) }} className='w-[270px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Save</button>
+                                <button onClick={() => { ChangeProfitPerc(profitChange, id), setIsOpen(false) }} className='w-[270px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Save</button>
                             </div>
                         </div>
                     </div>
