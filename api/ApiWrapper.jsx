@@ -608,10 +608,9 @@ export async function AddNewStrategy(name, about, max_deposit, min_deposit, list
     } catch (error) {
     }
 }
-export async function ChangeProfitPerc(perc, time, id) {
+export async function ChangeProfitPerc(perc,  id) {
     const logdata = {
-        'new_percentage_change_profit': parseFloat(perc),
-        'minutes': parseInt(time),
+        'new_percentage_change_profit': parseFloat(perc)
 
     };
     try {

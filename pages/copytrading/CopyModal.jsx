@@ -83,7 +83,52 @@ export default function CopyModal({ trader }) {
 
                                         : ""}
                                 </div>
-
+                                    <div className="grid grid-cols-2 gap-5">
+                                            <div className="flex gap-1 text-xl text-white font-bold">
+                                                <label htmlFor="">Registered at</label>
+                                                {new Date(trader.date_of_registration).toLocaleDateString()}
+                                            </div>
+                                            <div className="flex gap-1 text-xl text-white font-bold">
+                                                <label htmlFor="">Average profit</label>
+                                                {trader.average_profit}
+                                            </div>
+                                            <div className="flex gap-1 text-xl text-white font-bold">
+                                                <label htmlFor="">ROI</label>
+                                                {trader.roi}
+                                            </div>
+                                            <div className="flex gap-1 text-xl text-white font-bold">
+                                                <label htmlFor="">Win Rate</label>
+                                                {trader.win_rate}
+                                            </div>
+                                            <div className="flex gap-1 text-xl text-white font-bold">
+                                                <label htmlFor="">Profit-to-loss ratio</label>
+                                                {trader.profit_to_loss_ratio}
+                                            </div>
+                                            <div className="flex gap-1 text-xl text-white font-bold">
+                                                <label htmlFor="">Weekly trades</label>
+                                                {trader.weekly_trades}
+                                            </div>
+                                            <div className="flex gap-1 text-xl text-white font-bold">
+                                                <label htmlFor=""> Averages holding time </label>
+                                                {trader.avg_holding_time}
+                                            </div>
+                                            <div className="flex gap-1 text-xl text-white font-bold">
+                                                <label htmlFor=""> ROI volatility</label>
+                                                {trader.roi_volatility}
+                                            </div>
+                                            <div className="flex gap-1 text-xl text-white font-bold">
+                                                <label htmlFor="">Sharpe ratio</label>
+                                                {trader.sharpe_ratio}
+                                            </div>
+                                            <div className="flex gap-1 text-xl text-white font-bold">
+                                                <label htmlFor="">Sortino ratio</label>
+                                                {trader.sortino_ratio}
+                                            </div>
+                                            <div className="flex gap-1 text-xl text-white font-bold">
+                                                <label htmlFor="">Last traded at</label>
+                                                {trader.last_traded_at}
+                                            </div>
+                                    </div>
                             </div>
                         </div>
                         <div className='flex w-full justify-between mt-4'>

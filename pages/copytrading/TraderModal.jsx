@@ -99,7 +99,13 @@ export default function TraderModal({ nickname, about, register, id, strategies,
                                         <label className='text-white text-sm'>About</label>
                                         <textarea style={{ resize: 'none' }} onChange={(event) => setAbouts(event.target.value)} className='bg-[#0B1217] py-2 px-3 text-white text-sm rounded-lg shadow-lg outline-none w-[350px] h-[80px]' type='password' required >{abouts}</textarea>
                                     </div>
-                                    <div className="flex flex-col h-[200px] overflow-y-auto bg-[#0B1217] rounded-xl">
+         
+
+
+
+                                </div>
+                                <div className="flex flex-col gap-6">
+                                <div className="flex flex-col h-[200px] overflow-y-auto bg-[#0B1217] rounded-xl">
                                         <label className="text-white py-3 px-1 font-medium">Trader Strategies</label>
                                         {strategiess.map((strategy) => (
                                             <div
@@ -111,13 +117,7 @@ export default function TraderModal({ nickname, about, register, id, strategies,
                                             </div>
                                         ))}
                                     </div>
-
-
-
-                                </div>
-                                <div className="flex flex-col gap-6">
-
-                                    <div className="flex flex-col h-[200px] overflow-y-auto bg-[#0B1217] rounded-xl">
+                                    <div className="flex flex-col h-[200px] w-[350px] overflow-y-auto bg-[#0B1217] rounded-xl">
                                         <label className="text-white py-3 px-1 font-medium">Available Strategies</label>
 
                                         {strategiesList && strategiesList.map((strategy) => (
@@ -131,38 +131,7 @@ export default function TraderModal({ nickname, about, register, id, strategies,
                                         ))}
                                     </div>
 
-                                    <div className='flex justify-between items-start '>
-                                        <label className='text-white w-[250px] text-lg font-bold ' required>Average profit</label>
-                                        <span className="font-bold text-right text-white text-lg">{avg_profit}</span>
-                                    </div>
-                                    <div className='flex justify-between items-start '>
-                                        <label className='text-white w-[250px] text-lg font-bold ' required>Copiers Count</label>
-                                        <span className="font-bold text-right text-white text-lg">{copierscount}</span>
-                                    </div>
-                                    <div className='flex justify-between items-start '>
-                                        <label className='text-white w-[250px] text-lg font-bold ' required>Profit-to-Loss Ratio</label>
-                                        <span className="font-bold text-right text-white text-lg">4.63:1</span>
-                                    </div>
-                                    <div className='flex justify-between items-start '>
-                                        <label className='text-white w-[250px] text-lg font-bold ' required>Sharpe Ratio</label>
-                                        <span className="font-bold text-right text-white text-lg">0.46</span>
-                                    </div>
-                                    <div className='flex justify-between items-start '>
-                                        <label className='text-white w-[250px] text-lg font-bold ' required>Sortino Ratio</label>
-                                        <span className="font-bold text-right text-white text-lg">0.46</span>
-                                    </div>
-                                    <div className='flex justify-between items-start '>
-                                        <label className='text-white w-[250px] text-lg font-bold ' required>Average holding time </label>
-                                        <span className="font-bold text-right text-white text-lg">1.65 Days</span>
-                                    </div>
-                                    <div className='flex justify-between items-start '>
-                                        <label className='text-white w-[250px] text-lg font-bold ' required>Weekly trades</label>
-                                        <span className="font-bold text-right text-white text-lg">9.86</span>
-                                    </div>
-                                    <div className='flex justify-between items-start '>
-                                        <label className='text-white w-[250px] text-lg font-bold ' required>Last Traded at</label>
-                                        <span className="font-bold text-right text-white text-lg">2023-11-08 16:17:13</span>
-                                    </div>
+                                  
                                 </div>
                             </div>
                             <div className='flex w-full justify-between mt-4'>
