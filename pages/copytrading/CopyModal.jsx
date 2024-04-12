@@ -4,11 +4,14 @@ import { listTraderTx } from "../../api/ApiWrapper";
 import ChartComponent from "./StrategiesChart";
 import PieChart from "./PieChart";
 import DepositModal from "./DepositModal";
+import { Mydepos } from "../../api/ApiWrapper";
 export default function CopyModal({ trader }) {
     const [isOpen, setIsOpen] = useState(false);
     const [tx, setTx] = useState([])
+    const [myDepos, setMyDepos] = useState([])
     useEffect(() => {
         listTraderTx(setTx, trader.id)
+        Mydepos(setMyDepos)
     }, []);
     return (
         <div>
@@ -26,6 +29,8 @@ export default function CopyModal({ trader }) {
                                         <div key={strategy.id} className="w-[400px] h-[300px] flex flex-col  rounded-xl shadow-2xl p-5 bg-[#142028]">
                                             <div className="flex flex-col justify-between items-start">
                                                 <div className="flex gap-5 items-start">
+                                     
+
                                                     <div className="flex gap-[120px]">
                                                         <div className="flex flex-col gap-1">
                                                             <span className="text-white font-bold text-lg">{strategy.name}</span>
@@ -40,10 +45,33 @@ export default function CopyModal({ trader }) {
 
                                             <div className="flex flex-col gap-2 my-2">
                                                 <div className="flex justify-between">
-                                                    <span className="text-white font-medium">Profit</span>
+                                                    <span className="text-white font-bold">Profit</span>
                                                     <span className="text-white font-bold">{strategy.avg_profit}</span>
+                                                    
+                                
+                                      
+                                                </div>
+                                                {myDepos.map((item,index)=>(
+                                        item.strategy_id ===strategy.id && (
+                                            <div key={index} className="flex flex-col">
+                                                <div className="flex justify-between items-center">
+                                                    <span className="text-white  font-bold">Deposited</span>
+                                                <span className="text-white  font-bold">{item.value}</span>
 
                                                 </div>
+                                                <div className="flex justify-between items-center">
+                                                <span  className="text-white  font-bold">My Profit</span>
+
+                                                <span  className="text-white  font-bold">{item.profit}</span>
+
+                                                </div>
+
+                                            </div>
+
+                                        ) 
+                                 
+                                       
+                                       ))}
                                      
                                             </div>
                                         </div>

@@ -104,7 +104,7 @@ export default function CopyTrading() {
                    
                             <div className="flex justify-between">
                                 <span className="text-white font-medium">Copiers</span>
-                                <span className="text-white font-bold">{trader.copiers_count}</span>
+                                <span className="text-white font-bold">{trader.copiers_count}/{trader.max_copiers}</span>
 
                             </div>
                         </div>

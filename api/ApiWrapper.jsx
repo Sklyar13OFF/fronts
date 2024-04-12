@@ -21,6 +21,26 @@ export async function statsCopy(dispatch,setStats) {
         console.error("Fetching data failed", error);
     }
 }
+
+export async function Mydepos(setDepos) {
+    try {
+        const response = await fetch(`${BASE_URL}strategies/my_deposited/`, {
+            method: 'GET',
+            headers: {
+                'accept': 'application/json',
+                'Authorization': `Token ${getCookieValue('key')}`
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const jsonData = await response.json();
+        console.log(jsonData)
+        setDepos(jsonData);
+    } catch (error) {
+        console.error("Fetching data failed", error);
+    }
+}
 export async function listAllTraders(dispatch,setTraders) {
     try {
         const response = await fetch(`${BASE_URL}traders/`, {
