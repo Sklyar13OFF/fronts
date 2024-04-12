@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { AddTrader } from "../../api/ApiWrapper";
 import { listTraderTx } from "../../api/ApiWrapper";
 import ChartComponent from "./StrategiesChart";
+import PieChart from "./PieChart";
 import DepositModal from "./DepositModal";
 export default function CopyModal({ trader }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +19,7 @@ export default function CopyModal({ trader }) {
                     <div className={`copy-modal-content`}>
                         <div className="flex flex-col w-full items-start gap-8 p-6">
                             <span className='text-2xl text-white font-bold'>Select strategy to copy</span>
+                            <div className="flex gap-3">
                             <div className='flex flex-col gap-3'>
                                 <div className="overflow-x-auto flex gap-3  w-[750px]">
                                     {trader.strategies.map((strategy) => (
@@ -42,11 +44,7 @@ export default function CopyModal({ trader }) {
                                                     <span className="text-white font-bold">{strategy.avg_profit}</span>
 
                                                 </div>
-                                                <div className="flex justify-between">
-                                                    <span className="text-white font-medium">Copiers</span>
-                                                    <span className="text-white font-bold">{strategy.total_copiers}/{strategy.max_users}</span>
-
-                                                </div>
+                                     
                                             </div>
                                         </div>
                                     ))}</div>
@@ -83,53 +81,62 @@ export default function CopyModal({ trader }) {
 
                                         : ""}
                                 </div>
-                                    <div className="grid grid-cols-2 gap-5">
-                                            <div className="flex gap-1 text-xl text-white font-bold">
+                                </div>
+                                <div className="flex gap-5">
+                                {trader && <PieChart data={trader.get_cryptos_in_percentage} />}
+                                <div className="grid grid-cols-2 gap-1">
+                                            <div className="flex gap-1 text-sm text-white font-bold w-[180px]">
                                                 <label htmlFor="">Registered at</label>
                                                 {new Date(trader.date_of_registration).toLocaleDateString()}
                                             </div>
-                                            <div className="flex gap-1 text-xl text-white font-bold">
+                                            <div className="flex gap-1 text-sm text-white font-bold w-[180px]">
                                                 <label htmlFor="">Average profit</label>
                                                 {trader.average_profit}
                                             </div>
-                                            <div className="flex gap-1 text-xl text-white font-bold">
+                                            <div className="flex gap-1 text-sm text-white font-bold w-[180px]">
                                                 <label htmlFor="">ROI</label>
                                                 {trader.roi}
                                             </div>
-                                            <div className="flex gap-1 text-xl text-white font-bold">
+                                            <div className="flex gap-1 text-sm text-white font-bold w-[180px]">
                                                 <label htmlFor="">Win Rate</label>
                                                 {trader.win_rate}
                                             </div>
-                                            <div className="flex gap-1 text-xl text-white font-bold">
+                                            <div className="flex gap-1 text-sm text-white font-bold w-[180px]">
                                                 <label htmlFor="">Profit-to-loss ratio</label>
                                                 {trader.profit_to_loss_ratio}
                                             </div>
-                                            <div className="flex gap-1 text-xl text-white font-bold">
+                                            <div className="flex gap-1 text-sm text-white font-bold w-[180px]">
                                                 <label htmlFor="">Weekly trades</label>
                                                 {trader.weekly_trades}
                                             </div>
-                                            <div className="flex gap-1 text-xl text-white font-bold">
+                                            <div className="flex gap-1 text-sm text-white font-bold w-[180px]">
                                                 <label htmlFor=""> Averages holding time </label>
                                                 {trader.avg_holding_time}
                                             </div>
-                                            <div className="flex gap-1 text-xl text-white font-bold">
+                                            <div className="flex gap-1 text-sm text-white font-bold w-[180px]">
                                                 <label htmlFor=""> ROI volatility</label>
                                                 {trader.roi_volatility}
                                             </div>
-                                            <div className="flex gap-1 text-xl text-white font-bold">
+                                            <div className="flex gap-1 text-sm text-white font-bold w-[180px]">
                                                 <label htmlFor="">Sharpe ratio</label>
                                                 {trader.sharpe_ratio}
                                             </div>
-                                            <div className="flex gap-1 text-xl text-white font-bold">
+                                            <div className="flex gap-1 text-sm text-white font-bold w-[180px]">
                                                 <label htmlFor="">Sortino ratio</label>
                                                 {trader.sortino_ratio}
                                             </div>
-                                            <div className="flex gap-1 text-xl text-white font-bold">
+                                            <div className="flex gap-1 text-sm text-white font-bold w-[180px]">
                                                 <label htmlFor="">Last traded at</label>
                                                 {trader.last_traded_at}
                                             </div>
                                     </div>
+
+                                </div>
                             </div>
+                   
+                   
+                   
+                            
                         </div>
                         <div className='flex w-full justify-between mt-4'>
                             <button onClick={() => setIsOpen(false)} className='w-full gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>CLOSE</button>

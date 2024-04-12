@@ -2,11 +2,21 @@ import { useState, useEffect } from "react";
 import { DelStrategy } from "../../api/ApiWrapper";
 import ChartComponent from "./StrategiesChart";
 import Image from "next/image";
+import { listAllStrategies } from "../../api/ApiWrapper";
+import { setStrategies } from "../../src/features/strategies/strategySlice";
+import {useDispatch} from 'react-redux'
+
 import { EditStrategy } from "../../api/ApiWrapper";
+import { setAvailStrategies } from "../../src/features/strategies/availstrategySlice";
+import { ListAvailableStrategies } from "../../api/ApiWrapper";
 import '../globals.css'
 import ChangeProfitModal from "./ChangeProfitModal";
 import { listCrypto } from "../../api/ApiWrapper";
+import { statsCopy } from "../../api/ApiWrapper";
+import { setStats } from "../../src/features/mainStats/statsSlice";
 export default function StrategyModal({ depos, custom, current_copiers, name, minDepo, maxDepo, about, id, crypto, selected, maxCopiers, avg_profit, profits }) {
+   
+    const dispatch = useDispatch();
     const [isOpen, setIsOpen] = useState(false);
     const [minDepos, setminDepos] = useState(minDepo);
     const [maxDepos, setmaxDepos] = useState(maxDepo);
@@ -22,45 +32,77 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
     const filteredCryptoList = cryptoList.filter(item =>
         item.toLowerCase().includes(searchText.toLowerCase())
     );
+    const handleDelClick = async (id) => {
+        try {
+            await DelStrategy(id);
+                        setIsDelOpen(false);
+            await listAllStrategies(dispatch,setStrategies);
+            await statsCopy(dispatch, setStats);
+            await ListAvailableStrategies(dispatch,setAvailStrategies);
 
+        } catch (error) {
+            // Handle errors here
+            console.error('Error in handleSubmit:', error);
+        }}
+    const handleEditClick = async (copiersCount, naming, abouts, maxDepos, minDepos, id, depositAmounts, copiers) => {
+        try {
+            await EditStrategy(copiersCount, naming, abouts, maxDepos, minDepos, id, depositAmounts, copiers)
+
+            await listAllStrategies(dispatch,setStrategies);
+            await ListAvailableStrategies(dispatch,setAvailStrategies);
+            setIsOpen(false);
+            await statsCopy(dispatch, setStats);
+
+        } catch (error) {
+            // Handle errors here
+            console.error('Error in handleSubmit:', error);
+        }
+    }
     const handleItemClick = (item) => {
         setSelectedList(prevList => {
             if (prevList.includes(item)) {
-                return prevList.filter(selectedItem => selectedItem !== item);
+                // Remove item from selectedList
+                const updatedList = prevList.filter(selectedItem => selectedItem !== item);
+                // Remove item from depositAmounts
+                setDepositAmounts(prevDepositAmounts => {
+                    return prevDepositAmounts.filter(depositItem => depositItem.name !== item);
+                });
+                return updatedList;
             } else {
                 // Add item to selectedList
                 return [...prevList, item];
             }
         });
-
+    
+        // Check if the item is already present in depositAmounts
+        const isItemInDepositAmounts = depositAmounts.some(i => i.name === item);
+    
+        // If the item is already in depositAmounts, remove it; otherwise, add it
         setDepositAmounts(prevState => {
-            const exists = prevState.some(i => i.name === item);
-            if (!exists) {
-                // Add item to depositAmounts with default value
-                return [...prevState, { name: item, total_value: 0, side: 'short' }];
+            if (isItemInDepositAmounts) {
+                // If the item is already present, remove it
+                return prevState.filter(i => i.name !== item);
             } else {
-                // Update item in depositAmounts with side: 'short' instead of removing
-                return prevState.map(i => {
-                    if (i.name === item) {
-                        return { ...i, side: 'short' };
-                    }
-                    return i;
-                });
+                // If the item is not present, add it with side 'short' and initial total_value of 0
+                return [...prevState, { name: item, total_value: 0, side: 'short' }];
             }
         });
     };
-    const handleDepositChange = (itemName, amount, side) => {
-        setDepositAmounts(prevState => {
-            return prevState.map(item => {
-                if (item.name === itemName) {
-                    const newSide = item.side === 'long' ? 'short' : 'long';
-                    return { ...item, total_value: amount, side: newSide };
-                }
-                return item;
+    
+    
+    
+        const handleDepositChange = (itemName, amount, side) => {
+            setDepositAmounts(prevState => {
+                const updatedState = prevState.map(item => {
+                    if (item.name === itemName) {
+                        return { ...item, total_value: amount, side: side }; // Set side based on the value of 'side' parameter
+                    }
+                    return item;
+                });
+                return updatedState;
             });
-        });
-    };
-
+        };
+        
     useEffect(() => {
         listCrypto(setCryptoList);
     }, []);
@@ -69,7 +111,7 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
         <div>
             <div onClick={() => setIsOpen(true)} key={id} className="text-white divi flex flex-col p-5">
                 <div className="flex flex-col gap-2  p-2">
-                    <span className="text-white text-xl">{current_copiers}/{maxCopiers} </span>
+                   
                     <div className="flex item-center justify-center flex-col gap-3">
                         <ChartComponent chartData={profits} />
 
@@ -90,18 +132,7 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                                 <div className="flex items-center ">
                                     <div className="flex flex-col gap-3">
                                         <h5 className='text-2xl text-white font-bold'>Edit strategy</h5>
-                                        <div className="flex rounded-2xl w-[300px] items-center bg-[#0B1217]">
-                                            <div className='flex gap-1 items-start flex-col'>
-                                                <input type='number' value={copiersCount} onChange={(event) => setCopiersCount(event.target.value)} className='bg-[#0B1217] px-3 text-white font-medium text-xl rounded-lg shadow-lg outline-none w-[130px] text-right h-[50px]' required />
-                                            </div>
-                                            <div className="text-white font-bold">
-                                                /
-                                            </div>
-                                            <div className='flex gap-1 items-start flex-col'>
-                                                <input type='number' value={copiers} onChange={(event) => setmaxCopiers(event.target.value)} className=' bg-[#0B1217] px-3 text-white text-xl font-medium rounded-lg shadow-lg outline-none w-[130px] h-[50px]' required />
-                                            </div>
-                                            <Image height={26} width={26} src='/assets/icons/user.svg' />
-                                        </div>
+
                                         <div className="flex rounded-2xl w-[300px] items-center bg-[#0B1217]">
                                             <div className='flex gap-1 items-start flex-col'>
                                                 <input type='number' value={minDepos} onChange={(event) => setminDepos(event.target.value)} className='bg-[#0B1217] px-3 text-white font-medium text-xl rounded-lg shadow-lg outline-none w-[130px] text-right h-[50px]' required />
@@ -139,7 +170,7 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
 
                                                     <div className='flex w-full justify-between mt-4'>
                                                         <button onClick={() => setIsDelOpen(false)} className='text-white font-bold'>Close</button>
-                                                        <button onClick={() => { DelStrategy(id), setIsOpen(false) }} className='w-[270px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Delete</button>
+                                                        <button onClick={() => handleDelClick(id)} className='w-[270px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Delete</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -191,13 +222,16 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                                                     <Image width={26} height={26} src={`/assets/icons/${(item.name).toLowerCase()}.png`} />
                                                     <span className="text-white font-medium text-sm">{item.name}</span>
                                                 </div>
-                                                <label class="switch">
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={item.side === 'long'}
-                                                        onChange={(e) => handleDepositChange(item.name, item.total_value, e.target.checked ? 'long' : 'short')}
-                                                    />
-                                                </label>
+                                                {item.name != 'USDT' && 
+                                                                      <label class="switch">
+                                                                      <input
+                                                                          type="checkbox"
+                                                                          checked={item.side === 'long'}
+                                                                          onChange={(e) => handleDepositChange(item.name, item.total_value, e.target.checked ? 'long' : 'short')}
+                                                                      />
+                                                                  </label>
+                                                }
+                          
 
                                                 <input
                                                     type="number"
@@ -211,7 +245,7 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                                 </div>
                                 <div className='flex w-full justify-between mt-8'>
                                     <button onClick={() => setIsOpen(false)} className='text-white font-bold'>Close</button>
-                                    <button onClick={() => EditStrategy(copiersCount, naming, abouts, maxDepos, minDepos, id, depositAmounts, copiers)} className='w-[470px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Edit</button>
+                                    <button onClick={() => handleEditClick(copiersCount, naming, abouts, maxDepos, minDepos, id, depositAmounts, copiers)} className='w-[470px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Edit</button>
                                 </div>
                             </div>
                         </div>

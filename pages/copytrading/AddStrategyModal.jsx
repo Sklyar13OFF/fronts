@@ -1,9 +1,16 @@
 import { useState, useEffect } from "react";
 import { AddNewStrategy } from "../../api/ApiWrapper";
 import Image from "next/image";
+import { listAllStrategies,ListAvailableStrategies } from "../../api/ApiWrapper";
+import { setStrategies } from "../../src/features/strategies/strategySlice";
+import { setAvailStrategies } from "../../src/features/strategies/availstrategySlice";
 import { listCrypto } from "../../api/ApiWrapper";
-
+import {useDispatch} from 'react-redux'
+import { statsCopy } from "../../api/ApiWrapper";
+import { setStats } from "../../src/features/mainStats/statsSlice";
 export default function AddStrategyModal() {
+    const dispatch = useDispatch();
+
     const [isOpen, setIsOpen] = useState(false);
     const [minDepo, setminDepo] = useState('');
     const [maxDepo, setmaxDepo] = useState('');
@@ -19,7 +26,16 @@ export default function AddStrategyModal() {
     const filteredCryptoList = cryptoList.filter(item =>
         item.toLowerCase().includes(searchText.toLowerCase())
     );
+    async function handleAddClick(name, about, maxDepo, minDepo, depositAmounts,){
+        await AddNewStrategy(name, about, maxDepo, minDepo, depositAmounts)
+        await statsCopy(dispatch, setStats);
+        await ListAvailableStrategies(dispatch,setAvailStrategies);
 
+        setIsOpen(false)
+        
+        await listAllStrategies(dispatch,setStrategies)
+
+     }
     const handleItemClick = (item) => {
         setSelectedList(prevList => {
             if (prevList.includes(item)) {
@@ -65,10 +81,7 @@ export default function AddStrategyModal() {
                                             <label className='text-white text-sm' >Maximum deposit amount</label>
                                             <input type='number' onChange={(event) => setmaxDepo(event.target.value)} className='bg-[#0B1217] px-3 text-white text-sm rounded-lg shadow-lg outline-none w-[350px] h-[40px]' required />
                                         </div>
-                                        <div className='flex gap-1 items-start flex-col'>
-                                            <label className='text-white text-sm' >Maximum copiers</label>
-                                            <input type='number' onChange={(event) => setmaxCopiers(event.target.value)} className='bg-[#0B1217] px-3 text-white text-sm rounded-lg shadow-lg outline-none w-[350px] h-[40px]' required />
-                                        </div>
+                
                                         <div className='flex gap-1 items-start flex-col'>
                                             <label className='text-white text-sm'>About</label>
                                             <textarea style={{ resize: 'none' }} onChange={(event) => setAbout(event.target.value)} className='bg-[#0B1217] py-2 px-3 text-white text-sm rounded-lg shadow-lg outline-none w-[350px] h-[80px]' type='password' required ></textarea>
@@ -114,7 +127,7 @@ export default function AddStrategyModal() {
                                 </div>
                                 <div className='flex w-full justify-between mt-4'>
                                     <button onClick={() => setIsOpen(false)} className='text-white font-bold'>Close</button>
-                                    <button onClick={() => { AddNewStrategy(name, about, maxDepo, minDepo, depositAmounts,), setIsOpen(false) }} className='w-[470px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Add</button>
+                                    <button onClick={() =>  handleAddClick(name, about, maxDepo, minDepo, depositAmounts)} className='w-[470px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Add</button>
                                 </div>
                             </div>
                         </div>

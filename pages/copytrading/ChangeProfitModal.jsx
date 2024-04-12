@@ -3,15 +3,28 @@ import { AddTrader } from "../../api/ApiWrapper";
 import { ChangeProfitPerc } from "../../api/ApiWrapper";
 import Slider from "rc-slider";
 import 'rc-slider/assets/index.css';
-
+import {useDispatch} from 'react-redux'
+import { listAllStrategies } from "../../api/ApiWrapper";
+import { setStrategies } from "../../src/features/strategies/strategySlice";
 export default function ChangeProfitModal({ custom, profit, id }) {
+    const dispatch = useDispatch()
     const [isOpen, setIsOpen] = useState(false);
-    const [minutes, setMinutes] = useState(0)
     const [profitChange, setProfitChange] = useState(0)
     const OnChangeProfitEventTriggerd = (newValue) => {
         setProfitChange(newValue);
     };
+    const handleEditClick = async (profitChange, id) => {
+        try {
+            await ChangeProfitPerc(profitChange, id)
 
+            await listAllStrategies(dispatch,setStrategies);
+            setIsOpen(false);
+   
+
+        } catch (error) {
+            console.error('Error in handleSubmit:', error);
+        }
+    }
     return (
         <div>
             <button className='w-[200px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white' onClick={() => setIsOpen(true)}>Profit: {profit}%</button>
@@ -68,7 +81,7 @@ export default function ChangeProfitModal({ custom, profit, id }) {
          
                             <div className='flex w-full justify-between mt-4'>
                                 <button onClick={() => setIsOpen(false)} className='text-white font-bold'>Close</button>
-                                <button onClick={() => { ChangeProfitPerc(profitChange, id), setIsOpen(false) }} className='w-[270px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Save</button>
+                                <button onClick={() => handleEditClick(profitChange, id)} className='w-[270px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Save</button>
                             </div>
                         </div>
                     </div>

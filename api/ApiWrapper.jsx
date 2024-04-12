@@ -2,7 +2,26 @@ const BASE_URL = 'http://127.0.0.1:8000/v1/'
 const BASE_FRONT = 'http://localhost:3000/'
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
-export async function listAllTraders(setList) {
+
+export async function statsCopy(dispatch,setStats) {
+    try {
+        const response = await fetch(`${BASE_URL}copytrading/stats/`, {
+            method: 'GET',
+            headers: {
+                'accept': 'application/json',
+                'Authorization': `Token ${getCookieValue('key')}`
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const jsonData = await response.json();
+        dispatch(setStats(jsonData));
+    } catch (error) {
+        console.error("Fetching data failed", error);
+    }
+}
+export async function listAllTraders(dispatch,setTraders) {
     try {
         const response = await fetch(`${BASE_URL}traders/`, {
             method: 'GET',
@@ -15,7 +34,25 @@ export async function listAllTraders(setList) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const jsonData = await response.json();
-        setList(jsonData)
+        dispatch(setTraders(jsonData));
+    } catch (error) {
+        console.error("Fetching data failed", error);
+    }
+}
+export async function listAllStrategies(dispatch,setStrategies) {
+    try {
+        const response = await fetch(`${BASE_URL}strategies/`, {
+            method: 'GET',
+            headers: {
+                'accept': 'application/json',
+                'Authorization': `Token ${getCookieValue('key')}`
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const jsonData = await response.json();
+        dispatch(setStrategies(jsonData));
     } catch (error) {
         console.error("Fetching data failed", error);
     }
@@ -164,42 +201,7 @@ export async function listCrypto(setCryptoList) {
         console.error("Fetching data failed", error);
     }
 }
-export async function listAllStrategies(setList) {
-    try {
-        const response = await fetch(`${BASE_URL}strategies/`, {
-            method: 'GET',
-            headers: {
-                'accept': 'application/json',
-                'Authorization': `Token ${getCookieValue('key')}`
-            }
-        });
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const jsonData = await response.json();
-        setList(jsonData)
-    } catch (error) {
-        console.error("Fetching data failed", error);
-    }
-}
-export async function statsCopy(setStats) {
-    try {
-        const response = await fetch(`${BASE_URL}copytrading/stats/`, {
-            method: 'GET',
-            headers: {
-                'accept': 'application/json',
-                'Authorization': `Token ${getCookieValue('key')}`
-            }
-        });
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const jsonData = await response.json();
-        setStats(jsonData)
-    } catch (error) {
-        console.error("Fetching data failed", error);
-    }
-}
+
 export async function FollowTable(setFollowData) {
     try {
         const response = await fetch(`${BASE_URL}traders/last_followed_traders/`, {
@@ -362,11 +364,27 @@ export async function CheckPing(key) {
     }
     return false;
 }
-export async function AddTrader(nickname, about, photo) {
+export async function AddTrader(nickname, about, photo, strategiess) {
+    const strategiesJson = JSON.stringify(strategiess);
+
     const formData = new FormData();
     formData.append('nickname', nickname);
     formData.append('about', about);
-    formData.append('photo', photo);
+    
+    // Parse JSON string back into an array
+    const strategiesArray = JSON.parse(strategiesJson);
+    
+    // Extract strategy ids from the array
+    const strategyIds = strategiesArray.map(strategy => strategy.id);
+    
+    // Convert ids array to comma-separated string
+    const strategyIdsString = strategyIds.join(',');
+    
+    formData.append('strategies_id', strategyIdsString); // Append the serialized array
+
+    if (photo !== null) {
+        formData.append('photo', photo);
+    }
 
     try {
         const response = await fetch(`${BASE_URL}traders/`, {
@@ -388,7 +406,9 @@ export async function AddTrader(nickname, about, photo) {
     }
 }
 
-export async function EditTrader(nickname, about, id, photo, followers, strategiess) {
+
+
+export async function EditTrader(nickname, about, id, photo, strategiess,copiers,maxcopiers,isVisible) {
     let textData
 
     if (strategiess) {
@@ -399,14 +419,19 @@ export async function EditTrader(nickname, about, id, photo, followers, strategi
         textData = {
             nickname: nickname,
             about: about,
-            followers_count: followers,
-            strategies_id: ids
+            strategies_id: ids,
+            copiers_count:copiers,
+            max_copiers:maxcopiers,
+            visible:isVisible
         };
     } else {
         textData = {
             nickname: nickname,
             about: about,
-            followers_count: followers
+            copiers_count:copiers,
+            max_copiers:maxcopiers,
+            visible:isVisible
+
 
         };
     }
@@ -580,14 +605,13 @@ export async function DelStrategy(id) {
     } catch (error) {
     }
 }
-export async function AddNewStrategy(name, about, max_deposit, min_deposit, list, copiers) {
+export async function AddNewStrategy(name, about, max_deposit, min_deposit, list) {
     const logdata = {
         'name': name,
         'about': about,
         'max_deposit': max_deposit,
         'min_deposit': min_deposit,
-        'cryptos': list,
-        'max_users': copiers
+        'cryptos': list
     };
     console.log(list)
     try {

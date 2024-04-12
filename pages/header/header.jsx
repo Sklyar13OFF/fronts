@@ -4,7 +4,30 @@ import { CheckPingHeader } from "../../api/ApiWrapper"
 import { fetchIsAdmin } from "../../api/ApiWrapper";
 import { MyInfo } from "../../api/ApiWrapper";
 import { useState, useEffect } from "react"
+import { useRouter } from 'next/router';
+
 export default function Header() {
+
+    const [urlyk, setUrlyk] = useState('');
+    const router = useRouter();
+
+    useEffect(() => {
+        const handleRouteChange = () => {
+            const pathname = router.pathname;
+
+            if (pathname.endsWith("/copytrading")) {
+                setUrlyk('copy');
+            } else if (pathname.endsWith("/users")) {
+                setUrlyk('users');
+            }
+        };
+
+        router.events.on('routeChangeComplete', handleRouteChange);
+
+        return () => {
+            router.events.off('routeChangeComplete', handleRouteChange);
+        };
+    }, [router.pathname]);
     const [myInfo, setMyInfo] = useState({})
     const [isAdmin, setAdm] = useState(false);
 
@@ -29,17 +52,19 @@ export default function Header() {
                     )
                 }
                 {ping &&
-                    <Link href='/copytrading' className="text-white link w-[200px] font-medium" >COPY TRADING</Link>
+                    <Link href='/copytrading' className={`${urlyk === 'copy' ? 'font-bold bg-[#5396a2]' : 'font-medium'} rounded-xl text-white link w-[150px] `} >
+                        COPY TRADING
+                        </Link>
 
                 }
                 {ping &&
 
-                    <Link href='/users' className="text-white link w-[200px]  font-medium" >USERS</Link>
+                    <Link href='/users' className={`${urlyk === 'users' ? 'font-bold bg-[#5396a2]' : 'font-medium'} rounded-xl text-white link w-[120px] `} >USERS</Link>
                 }
 
                 {ping &&
 
-                    <button className="w-[100px] rounded-lg bg-[#00A2BF] text-white h-[40px] " onClick={signOut}>Log out</button>
+                    <button className="w-[100px] rounded-lg bg-[#00A2BF] text-white h-[40px] ml-5" onClick={signOut}>Log out</button>
                 }
             </div>
         </div>
