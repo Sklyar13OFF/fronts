@@ -30,7 +30,8 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
     const [searchText, setSearchText] = useState('');
     const [selectedList, setSelectedList] = useState(selected);
     const [depositAmounts, setDepositAmounts] = useState(
-        crypto.map(item => ({ ...item, init_value: item.total_value, init_side: item.side }))
+
+       crypto ? crypto.map(item => ({ ...item, init_value: item.total_value, init_side: item.side })) : {}
     );
     
 

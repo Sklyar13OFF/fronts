@@ -4,9 +4,12 @@ import {  EditStrategy } from "../../api/ApiWrapper";
 export default function NewProfitModal({copiers,name, about, maxDepo, mindepo,id, depos, copierss, isOpen, tx, onCloseModal, array }) {
     function createZeroArray(initialArray) {
         const zeroArray = {};
-        initialArray.forEach(crypto => {
-            zeroArray[crypto.name] = 0;
-        });
+        if (Array.isArray(initialArray)){
+            initialArray.forEach(crypto => {
+                zeroArray[crypto.name] = 0;
+            });
+        }
+     
         return zeroArray;
     }
     
@@ -90,7 +93,7 @@ export default function NewProfitModal({copiers,name, about, maxDepo, mindepo,id
                         <div className="flex flex-col w-full items-start gap-8 p-6">
                             <h5 className="text-white font-bold text-lg">Split up between txs</h5>
                             {/* Render array elements */}
-                            {initial.map((crypto, index) => (
+                            {Array.isArray(initial) && initial.map((crypto, index) => (
     <div key={index}>
         <p className='text-white font-medium'>
             {crypto.name}: {crypto.number - (diff[crypto.name] || 0)}
