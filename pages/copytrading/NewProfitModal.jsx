@@ -5,10 +5,13 @@ export default function NewProfitModal({copiers,name, about, maxDepo, mindepo,id
 
     const createZeroArray = (data) => {
         const zeroArray = {};
-        data.forEach(item => {
-            const key = `${item.crypto_pair}-${item.id}`;
-            zeroArray[key] = 0;
-        });
+        if (Array.isArray(data)){
+            data.forEach(item => {
+                const key = `${item.crypto_pair}-${item.id}`;
+                zeroArray[key] = 0;
+            });
+        }
+   
         return zeroArray;
     };
     
