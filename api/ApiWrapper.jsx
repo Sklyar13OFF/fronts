@@ -2,7 +2,33 @@ const BASE_URL = 'http://127.0.0.1:8000/v1/'
 const BASE_FRONT = 'http://localhost:3000/'
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
+export async function GetTxs(id,cryptos) {
+    const logdata =
+    {
+        "cryptos": cryptos
+    }
+    try {
+        const response = await fetch(`${BASE_URL}strategies/${id}/get_opened_transaction_by_names/`, {
+            method: 'POST',
+            headers: {
+                'accept': '*/*',
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${getCookieValue('key')}`
 
+            },
+            body: JSON.stringify(logdata),
+
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const jsonData = await response.json();
+        return jsonData
+
+    } catch (error) {
+    }
+}
 export async function statsCopy(dispatch,setStats) {
     try {
         const response = await fetch(`${BASE_URL}copytrading/stats/`, {
@@ -531,37 +557,51 @@ export async function fetchIsAdmin(setIsAdm) {
     }
 }
 
-export async function   EditStrategy(copiersCount, name, about, max_deposit, min_deposit, id, list, copiers) {
-    const logdata = {
-        'total_copiers': copiersCount,
-        "name": name,
-        "about": about,
-        'cryptos': list,
-        "max_deposit": max_deposit,
-        "min_deposit": min_deposit,
-        "max_users": copiers
-    };
-    console.log(logdata)
+export async function EditStrategy(copiersCount, name, about, max_deposit, min_deposit, id, list, copiers, inputValues) {
+    let logdata; // Declare logdata outside of the if statement
+    console.log(inputValues)
+    const filteredArray = list.filter(item => parseFloat(item.total_value) !== 0);
+    console.log(inputValues,'loool')
+    if (inputValues) {
+        logdata = {
+            'total_copiers': copiersCount,
+            "name": name,
+            "about": about,
+            'cryptos': filteredArray,
+            "max_deposit": max_deposit,
+            "min_deposit": min_deposit,
+            "max_users": copiers,
+            'open_transaction_list': inputValues
+        };
+    } else {
+        logdata = {
+            'total_copiers': copiersCount,
+            "name": name,
+            "about": about,
+            'cryptos': filteredArray,
+            "max_deposit": max_deposit,
+            "min_deposit": min_deposit,
+            "max_users": copiers
+        };
+    }
+
+    console.log(logdata);
     try {
         const response = await fetch(`${BASE_URL}strategies/${id}/`, {
-
-
             method: 'PATCH',
             headers: {
                 'accept': 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': `Token ${getCookieValue('key')}`
-
             },
             body: JSON.stringify(logdata),
         });
-
-
-
-
+        // Handle response if needed
     } catch (error) {
+        // Handle error
     }
 }
+
 export async function DelTrader(id) {
 
     try {
@@ -581,6 +621,7 @@ export async function DelTrader(id) {
     } catch (error) {
     }
 }
+
 export async function CopyStrategy(id, amount) {
     const logdata =
     {

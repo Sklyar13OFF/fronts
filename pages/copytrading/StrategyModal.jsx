@@ -11,12 +11,16 @@ import { setAvailStrategies } from "../../src/features/strategies/availstrategyS
 import { ListAvailableStrategies } from "../../api/ApiWrapper";
 import '../globals.css'
 import ChangeProfitModal from "./ChangeProfitModal";
+import { GetTxs } from "../../api/ApiWrapper";
+
 import { listCrypto } from "../../api/ApiWrapper";
 import { statsCopy } from "../../api/ApiWrapper";
+import NewProfitModal from "./NewProfitModal";
 import { setStats } from "../../src/features/mainStats/statsSlice";
 export default function StrategyModal({ depos, custom, current_copiers, name, minDepo, maxDepo, about, id, crypto, selected, maxCopiers, avg_profit, profits }) {
    
     const dispatch = useDispatch();
+    const [txs,setTxs] = useState([])
     const [isOpen, setIsOpen] = useState(false);
     const [minDepos, setminDepos] = useState(minDepo);
     const [maxDepos, setmaxDepos] = useState(maxDepo);
@@ -25,13 +29,41 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
     const [cryptoList, setCryptoList] = useState([]);
     const [searchText, setSearchText] = useState('');
     const [selectedList, setSelectedList] = useState(selected);
-    const [depositAmounts, setDepositAmounts] = useState(crypto);
+    const [depositAmounts, setDepositAmounts] = useState(
+        crypto.map(item => ({ ...item, init_value: item.total_value, init_side: item.side }))
+    );
+    
+
     const [abouts, setAbouts] = useState(about)
     const [copiers, setmaxCopiers] = useState(maxCopiers)
+    const [combinedCryptoArray, setCombinedCryptoArray] = useState([]);
+
     const [copiersCount, setCopiersCount] = useState(current_copiers)
+    const [changeCrypto,setChangeCrypto] = useState([])
     const filteredCryptoList = cryptoList.filter(item =>
         item.toLowerCase().includes(searchText.toLowerCase())
     );
+    useEffect(() => {
+        // Function to update the combinedCryptoArray
+        const updateCombinedCryptoArray = () => {
+            const combinedArray = [];
+            // Iterate through changeCrypto array
+            changeCrypto.forEach(crypto => {
+                // Find the crypto in depositAmounts
+                const depositCrypto = depositAmounts.find(item => item.name === crypto);
+                if (depositCrypto) {
+                    // If found, add it to the combined array with its number
+                    combinedArray.push({ name: crypto, number:depositCrypto.init_value- depositCrypto.total_value });
+                }
+            });
+            // Update the state with the new combined array
+            setCombinedCryptoArray(combinedArray);
+        };
+
+        // Call the function to update the combinedCryptoArray initially
+        updateCombinedCryptoArray();
+
+    }, [changeCrypto, depositAmounts]);
     const handleDelClick = async (id) => {
         try {
             await DelStrategy(id);
@@ -44,71 +76,115 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
             // Handle errors here
             console.error('Error in handleSubmit:', error);
         }}
-    const handleEditClick = async (copiersCount, naming, abouts, maxDepos, minDepos, id, depositAmounts, copiers) => {
-        try {
-            await EditStrategy(copiersCount, naming, abouts, maxDepos, minDepos, id, depositAmounts, copiers)
-
-            await listAllStrategies(dispatch,setStrategies);
-            await ListAvailableStrategies(dispatch,setAvailStrategies);
-            setIsOpen(false);
-            await statsCopy(dispatch, setStats);
-
-        } catch (error) {
-            // Handle errors here
-            console.error('Error in handleSubmit:', error);
-        }
-    }
-    const handleItemClick = (item) => {
-        setSelectedList(prevList => {
-            if (prevList.includes(item)) {
-                // Remove item from selectedList
-                const updatedList = prevList.filter(selectedItem => selectedItem !== item);
-                // Remove item from depositAmounts
-                setDepositAmounts(prevDepositAmounts => {
-                    return prevDepositAmounts.filter(depositItem => depositItem.name !== item);
-                });
-                return updatedList;
-            } else {
-                // Add item to selectedList
-                return [...prevList, item];
+        const handlefirstClick = async (id, changeCrypto, copiersCount, naming, abouts, maxDepos, minDepos, depositAmounts, copiers) => {
+            try {
+                const res = await GetTxs(id, changeCrypto);
+        
+                if (!res) {
+                    await EditStrategy(copiersCount, naming, abouts, maxDepos, minDepos, id, depositAmounts, copiers);
+                    window.location.href=''
+                    await statsCopy(dispatch, setStats);
+                } else {
+                    setTxs(res);
+                    setChildModal(true);
+                }
+            } catch (error) {
+                console.error('Error occurred:', error);
             }
-        });
-    
-        // Check if the item is already present in depositAmounts
-        const isItemInDepositAmounts = depositAmounts.some(i => i.name === item);
-    
-        // If the item is already in depositAmounts, remove it; otherwise, add it
-        setDepositAmounts(prevState => {
-            if (isItemInDepositAmounts) {
-                // If the item is already present, remove it
-                return prevState.filter(i => i.name !== item);
-            } else {
-                // If the item is not present, add it with side 'short' and initial total_value of 0
-                return [...prevState, { name: item, total_value: 0, side: 'short' }];
-            }
-        });
-    };
-    
-    
-    
-        const handleDepositChange = (itemName, amount, side) => {
+        };
+        
+        
+        
+        
+        const [childModal, setChildModal] = useState(false); 
+        
+        useEffect(() => {
+        }, [changeCrypto]);
+        
+  
+        const handleItemClick = (item, amount, side) => {
+            setSelectedList(prevList => {
+                if (prevList.includes(item)) {
+                    const updatedList = prevList.filter(selectedItem => selectedItem !== item);
+                    setDepositAmounts(prevDepositAmounts => {
+                        return prevDepositAmounts.filter(depositItem => depositItem.name !== item);
+                    });
+                    return updatedList;
+                } else {
+                    return [...prevList, item];
+                }
+            });
+        
+            const isItemInDepositAmounts = depositAmounts.some(i => i.name === item);
+        
+            // Update depositAmounts with the new item
             setDepositAmounts(prevState => {
-                const updatedState = prevState.map(item => {
+                if (isItemInDepositAmounts) {
+                    // If the item is already in depositAmounts, update it
+                    return prevState.map(i => {
+                        if (i.name === item) {
+                            return { ...i, total_value: amount, side: side };
+                        }
+                        return i;
+                    });
+                } else {
+                    // Add the item to depositAmounts
+                    return [...prevState, { name: item, total_value: amount, side: side }];
+                }
+            });
+        
+            // Update the changeCrypto array
+            setChangeCrypto(prevChangeCrypto => {
+                if (isItemInDepositAmounts) {
+                    // Remove the item if it exists in changeCrypto
+                    return prevChangeCrypto.filter(changeItem => changeItem !== item);
+                } else {
+                    // Add the item to changeCrypto
+                    return [...prevChangeCrypto, item];
+                }
+            });
+        };
+        const handleDepositChange = (itemName, amount, side) => {
+            // Find the initial deposit amount and side for the item
+            const { init_value: initialDepositAmount, init_side: initialSide } = depositAmounts.find(item => item.name === itemName) || { init_value: 0, init_side: null };
+        
+            // Update depositAmounts with the new amount and side
+            setDepositAmounts(prevState => {
+                return prevState.map(item => {
                     if (item.name === itemName) {
-                        return { ...item, total_value: amount, side: side }; // Set side based on the value of 'side' parameter
+                        return { ...item, total_value: amount, side: side };
                     }
                     return item;
                 });
-                return updatedState;
+            });
+        
+            // Update the changeCrypto array
+            setChangeCrypto(prevChangeCrypto => {
+                // Check if the current amount is lower than the initial deposit amount and if the side remains the same
+                if (parseFloat(amount) < parseFloat(initialDepositAmount) && side === initialSide) {
+                    // Add the item to changeCrypto if the current amount is lower and the side remains the same
+                    if (!prevChangeCrypto.includes(itemName)) {
+                        return [...prevChangeCrypto, itemName];
+                    }
+                } else {
+                    // Remove the item from changeCrypto if the current amount is not lower or the side changed
+                    return prevChangeCrypto.filter(item => item !== itemName);
+                }
+                return prevChangeCrypto; // Return previous state if no changes are made
             });
         };
         
+    const handleCloseModal = () => {
+        setChildModal(false);
+    };
+    
     useEffect(() => {
         listCrypto(setCryptoList);
     }, []);
 
     return (
         <div>
+{childModal && <NewProfitModal copiers={copiersCount} name={naming} about={abouts} maxDepo={maxDepos} mindepo={minDepos} id={id} depos={depositAmounts} copierss={copiers} isOpen={childModal} tx={txs} onCloseModal={handleCloseModal} array={combinedCryptoArray}/>}
             <div onClick={() => setIsOpen(true)} key={id} className="text-white divi flex flex-col p-5">
                 <div className="flex flex-col gap-2  p-2">
                    
@@ -223,12 +299,13 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                                                     <span className="text-white font-medium text-sm">{item.name}</span>
                                                 </div>
                                                 {item.name != 'USDT' && 
-                                                                      <label class="switch">
-                                                                      <input
-                                                                          type="checkbox"
-                                                                          checked={item.side === 'long'}
-                                                                          onChange={(e) => handleDepositChange(item.name, item.total_value, e.target.checked ? 'long' : 'short')}
-                                                                      />
+                                                                      <label className="switch">
+                                                   <input
+    type="checkbox"
+    checked={item.side === 'long'}
+    onChange={(e) => handleDepositChange(item.name, item.total_value, e.target.checked ? 'long' : 'short')}
+/>
+
                                                                   </label>
                                                 }
                           
@@ -245,10 +322,10 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                                 </div>
                                 <div className='flex w-full justify-between mt-8'>
                                     <button onClick={() => setIsOpen(false)} className='text-white font-bold'>Close</button>
-                                    <button onClick={() => handleEditClick(copiersCount, naming, abouts, maxDepos, minDepos, id, depositAmounts, copiers)} className='w-[470px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Edit</button>
+                                    <button onClick={() => handlefirstClick(id,changeCrypto,copiersCount, naming, abouts, maxDepos, minDepos, depositAmounts, copiers)} className='w-[470px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Edit</button>
                                 </div>
                             </div>
-                        </div>
+                        </div>  
                     </div>
                 </div>
             )
