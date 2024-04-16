@@ -103,9 +103,27 @@ export async function listAllStrategies(dispatch,setStrategies) {
         console.error("Fetching data failed", error);
     }
 }
-export async function listTraderTx(setTx, id) {
+export async function listOpenTraderTx(setTx, id) {
     try {
-        const response = await fetch(`${BASE_URL}traders/${id}/transactions/`, {
+        const response = await fetch(`${BASE_URL}traders/${id}/get_open_transactions/`, {
+            method: 'GET',
+            headers: {
+                'accept': 'application/json',
+                'Authorization': `Token ${getCookieValue('key')}`
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const jsonData = await response.json();
+        setTx(jsonData)
+    } catch (error) {
+        console.error("Fetching data failed", error);
+    }
+}
+export async function listCloseTraderTx(setTx, id) {
+    try {
+        const response = await fetch(`${BASE_URL}traders/${id}/get_close_transactions/`, {
             method: 'GET',
             headers: {
                 'accept': 'application/json',

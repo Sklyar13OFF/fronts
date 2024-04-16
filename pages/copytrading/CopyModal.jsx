@@ -1,16 +1,21 @@
 import { useState, useEffect } from "react";
 import { AddTrader } from "../../api/ApiWrapper";
-import { listTraderTx } from "../../api/ApiWrapper";
+import { listOpenTraderTx } from "../../api/ApiWrapper";
+import { listCloseTraderTx } from "../../api/ApiWrapper";
 import ChartComponent from "./StrategiesChart";
 import PieChart from "./PieChart";
 import DepositModal from "./DepositModal";
 import { Mydepos } from "../../api/ApiWrapper";
 export default function CopyModal({ trader }) {
     const [isOpen, setIsOpen] = useState(false);
-    const [tx, setTx] = useState([])
+    const [openTx, setOpentTx] = useState([])
+    const [closeTx, setCloseTx] = useState([])
+
     const [myDepos, setMyDepos] = useState([])
     useEffect(() => {
-        listTraderTx(setTx, trader.id)
+        listOpenTraderTx(setOpentTx, trader.id)
+        listCloseTraderTx(setCloseTx, trader.id)
+
         Mydepos(setMyDepos)
     }, []);
     return (
@@ -77,8 +82,36 @@ export default function CopyModal({ trader }) {
                                         </div>
                                     ))}</div>
                                 <div className="h-[200px] w-[750px] overflow-y-auto">
-                                    {tx ?
-                                        tx.map((item, index) => (
+                                    {openTx ?
+                                        openTx.map((item, index) => (
+                                            <div key={index} className="flex w-full h-[50px] items-center justify-between border-b border-white">
+                                                <div className="flex items-end  gap-2">
+                                                    <span className="text-white font-medium">
+                                                        {item.crypto_pair}
+
+                                                    </span>
+                                                    {item.side === 'long' ?
+                                                        <span className=" text-xs font-medium text-green-500">
+                                                            LONG
+                                                        </span> : <span className=" font-medium text-xs  text-red-500">
+                                                            SHORT
+                                                        </span>}
+                                                </div>
+                                                <div className="text-white font-medium">
+                                                    {item.open_price}
+                                                </div>
+                        
+                                                <div className="text-white font-medium">
+                                                    {new Date(item.open_time).toLocaleDateString()}
+                                                </div>
+                                            </div>
+                                        ))
+
+                                        : ""}
+                                </div>
+                                <div className="h-[200px] w-[750px] overflow-y-auto">
+                                    {closeTx ?
+                                        closeTx.map((item, index) => (
                                             <div key={index} className="flex w-full h-[50px] items-center justify-between border-b border-white">
                                                 <div className="flex items-end  gap-2">
                                                     <span className="text-white font-medium">
