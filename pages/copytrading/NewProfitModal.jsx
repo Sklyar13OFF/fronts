@@ -2,21 +2,20 @@ import React, { useState,useEffect } from "react";
 import {  EditStrategy } from "../../api/ApiWrapper";
 
 export default function NewProfitModal({copiers,name, about, maxDepo, mindepo,id, depos, copierss, isOpen, tx, onCloseModal, array }) {
-    function createZeroArray(initialArray) {
+
+    const createZeroArray = (data) => {
         const zeroArray = {};
-        if(Array.isArray(initialArray)){
-            initialArray.forEach(crypto => {
-                zeroArray[crypto.name] = 0;
-            });
-        }
-   
+        data.forEach(item => {
+            const key = `${item.crypto_pair}-${item.id}`;
+            zeroArray[key] = 0;
+        });
         return zeroArray;
-    }
+    };
     
-    const [inputValues, setInputValues] = useState({});
+    
+    const [inputValues, setInputValues] = useState(createZeroArray(tx));
     const [isButtonEnabled,setEnabled] = useState(false)
     const [diff,setDiff] = useState(createZeroArray(array))
-    console.log(diff,'diff')
     const [sumi,setSum] = useState(1)
 
     const [final,setFinal] = useState([])
@@ -67,9 +66,11 @@ useEffect(() => {
 
     const ts = aggregateAndFilterCryptos(inputValues);
     setDiff(ts);
+    console.log(final)
     const updatedFinal = constructArrayFromObject(inputValues);
     console.log(inputValues)
     console.log(updatedFinal)
+    console.log(tx,'array')
     setFinal(updatedFinal);
 }, [inputValues]);
 
@@ -120,28 +121,31 @@ useEffect(() => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {tx.map((item, index) => (
-                                        <tr key={index} className='h-8'>
-                                            <td className='text-center text-white font-medium'>{item.crypto_pair}</td>
-
-                                            <td className='text-center text-white font-medium'>{item.total_value}%</td>
-                                            <td className='text-center text-white font-medium'>{item.side}</td>
-                                            <td className='text-center text-white font-medium'>{item.open_price}</td>
-                                            <td className='text-center text-white font-medium'>{new Date(item.open_time).toDateString()}</td>
-                                            <td className='text-center text-white font-medium'>
-                                            <input
+                                {tx.map((item, index) => (
+    <tr key={index} className='h-8'>
+        <td className='text-center text-white font-medium'>{item.crypto_pair}</td>
+        <td className='text-center text-white font-medium'>{item.total_value}%</td>
+        <td className='text-center text-white font-medium'>{item.side}</td>
+        <td className='text-center text-white font-medium'>{item.open_price}</td>
+        <td className='text-center text-white font-medium'>{new Date(item.open_time).toDateString()}</td>
+        <td className='text-center text-white font-medium'>
+            {/* Log the value to debug */}
+            {console.log('Max Value:', Number(parseInt(item.total_value)))}
+            <input
     type="number"
-    step='0.01'
-    className='rounded-lg bg-[#0B1217] w-[100px]'
-    min={0}
-    max={Number(parseFloat(item.total_value).toFixed(2))} 
+    step="0.01"
+    className={`rounded-lg bg-[#0B1217] outline-none w-[100px] ${inputValues[`${item.crypto_pair}-${item.id}`] > parseFloat(item.total_value) ? "border border-red-500" : ''} `}
+    min='0'
+    max='10'
     value={inputValues[`${item.crypto_pair}-${item.id}`]} 
     onChange={(e) => handleInputChange(item.crypto_pair, item.id, e.target.value)}
 />
 
-                                            </td>
-                                        </tr>
-                                    ))}
+
+        </td>
+    </tr>
+))}
+
                                 </tbody>
                             </table>
                            </div>

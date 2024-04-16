@@ -57,8 +57,8 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                     combinedArray.push({ name: crypto, number:depositCrypto.init_value- depositCrypto.total_value });
                 }
             });
-            // Update the state with the new combined array
-            setCombinedCryptoArray(combinedArray);
+            console.log(combinedArray)
+                setCombinedCryptoArray(combinedArray);
         };
 
         // Call the function to update the combinedCryptoArray initially
@@ -134,46 +134,69 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                 }
             });
         
-            // Update the changeCrypto array
             setChangeCrypto(prevChangeCrypto => {
-                if (isItemInDepositAmounts) {
-                    // Remove the item if it exists in changeCrypto
-                    return prevChangeCrypto.filter(changeItem => changeItem !== item);
-                } else {
-                    // Add the item to changeCrypto
-                    return [...prevChangeCrypto, item];
-                }
+                const newChangeCrypto = depositAmounts.reduce((acc, item) => {
+                    const { init_value: initialDepositAmount, init_side: initialSide } = item;
+                    // Check if the current amount is lower than the initial deposit amount and if the side remains the same
+                    if (parseFloat(item.total_value) < parseFloat(initialDepositAmount) && initialSide === 'long') {
+                        // Add the item to changeCrypto if the current amount is lower and the side remains the same
+                        if (!acc.includes(item.name)) {
+                            return [...acc, item.name];
+                        }
+                    }
+                    return acc;
+                }, []);
+            
+                console.log(newChangeCrypto); // Log the updated state here
+            
+                return newChangeCrypto; // Return the updated state
             });
+            
         };
-        const handleDepositChange = (itemName, amount, side) => {
-            // Find the initial deposit amount and side for the item
-            const { init_value: initialDepositAmount, init_side: initialSide } = depositAmounts.find(item => item.name === itemName) || { init_value: 0, init_side: null };
-        
-            // Update depositAmounts with the new amount and side
+        const handleInputChange = (itemName, amount) => {
             setDepositAmounts(prevState => {
-                return prevState.map(item => {
+                const updatedDepositAmounts = prevState.map(item => {
                     if (item.name === itemName) {
-                        return { ...item, total_value: amount, side: side };
+                        return { ...item, total_value: amount };
                     }
                     return item;
                 });
-            });
-        
-            // Update the changeCrypto array
-            setChangeCrypto(prevChangeCrypto => {
-                // Check if the current amount is lower than the initial deposit amount and if the side remains the same
-                if (parseFloat(amount) < parseFloat(initialDepositAmount) && side === initialSide) {
-                    // Add the item to changeCrypto if the current amount is lower and the side remains the same
-                    if (!prevChangeCrypto.includes(itemName)) {
-                        return [...prevChangeCrypto, itemName];
-                    }
-                } else {
-                    // Remove the item from changeCrypto if the current amount is not lower or the side changed
-                    return prevChangeCrypto.filter(item => item !== itemName);
-                }
-                return prevChangeCrypto; // Return previous state if no changes are made
+                updateChangeCrypto(updatedDepositAmounts);
+                return updatedDepositAmounts;
             });
         };
+        
+        const handleCheckboxChange = (itemName, side) => {
+            setDepositAmounts(prevState => {
+                const updatedDepositAmounts = prevState.map(item => {
+                    if (item.name === itemName) {
+                        return { ...item, side: side };
+                    }
+                    return item;
+                });
+                updateChangeCrypto(updatedDepositAmounts);
+                return updatedDepositAmounts;
+            });
+        };
+        
+        useEffect(() => {
+            updateChangeCrypto(depositAmounts);
+        }, [depositAmounts]);
+        
+        const updateChangeCrypto = (updatedDepositAmounts) => {
+            const newChangeCrypto = updatedDepositAmounts.reduce((acc, item) => {
+                const { init_value: initialDepositAmount, init_side: initialSide, side: currentSide } = item;
+                if (parseFloat(item.total_value) < parseFloat(initialDepositAmount) && initialSide === 'long') {
+                    if (!acc.includes(item.name) && currentSide === initialSide) {
+                        return [...acc, item.name];
+                    }
+                }
+                return acc;
+            }, []);
+            console.log(newChangeCrypto); // Log the updated state here
+            setChangeCrypto(newChangeCrypto);
+        };
+        
         
     const handleCloseModal = () => {
         setChildModal(false);
@@ -293,32 +316,29 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                                 <div className="flex flex-col items-start bg-[#0B1217] rounded-lg px-3 py-1 gap-1">
                                     <label className='text-white text-sm font-bold'>Selected cryptos</label>
                                     <div className="h-[200px] w-full bg-[#0B1217] rounded-lg overflow-y-auto">
-                                        {depositAmounts.map((item, index) => (
-                                            <div key={index} className="flex items-center h-[60px] px-5 justify-between border-b border-white">
-                                                <div className="flex items-center gap-1">
-                                                    <Image width={26} height={26} src={`/assets/icons/${(item.name).toLowerCase()}.png`} />
-                                                    <span className="text-white font-medium text-sm">{item.name}</span>
-                                                </div>
-                                                {item.name != 'USDT' && 
-                                                                      <label className="switch">
-                                                   <input
-    type="checkbox"
-    checked={item.side === 'long'}
-    onChange={(e) => handleDepositChange(item.name, item.total_value, e.target.checked ? 'long' : 'short')}
-/>
-
-                                                                  </label>
-                                                }
-                          
-
-                                                <input
-                                                    type="number"
-                                                    value={item.total_value}
-                                                    className="w-[100px] px-2 text-white rounded-lg text-sm bg-[#142028] outline-none"
-                                                    onChange={(e) => handleDepositChange(item.name, e.target.value,)}
-                                                />
-                                            </div>
-                                        ))}
+                                    {depositAmounts.map((item, index) => (
+    <div key={index} className="flex items-center h-[60px] px-5 justify-between border-b border-white">
+        <div className="flex items-center gap-1">
+            <Image width={26} height={26} src={`/assets/icons/${(item.name).toLowerCase()}.png`} />
+            <span className="text-white font-medium text-sm">{item.name}</span>
+        </div>
+        {item.name !== 'USDT' &&
+            <label className="switch">
+                <input
+                    type="checkbox"
+                    checked={item.side === 'long'}
+                    onChange={(e) => handleCheckboxChange(item.name, e.target.checked ? 'long' : 'short')}
+                />
+            </label>
+        }
+        <input
+            type="number"
+            value={item.total_value}
+            className="w-[100px] px-2 text-white rounded-lg text-sm bg-[#142028] outline-none"
+            onChange={(e) => handleInputChange(item.name, e.target.value)}
+        />
+    </div>
+))}
                                     </div>
                                 </div>
                                 <div className='flex w-full justify-between mt-8'>

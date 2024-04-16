@@ -574,6 +574,12 @@ export async function fetchIsAdmin(setIsAdm) {
 
     }
 }
+const replaceNaNWithZero = (inputValues) => {
+    return inputValues.map(item => ({
+        ...item,
+        value_change: isNaN(item.value_change) ? 0 : item.value_change
+    }));
+};
 
 export async function EditStrategy(copiersCount, name, about, max_deposit, min_deposit, id, list, copiers, inputValues) {
     let logdata; // Declare logdata outside of the if statement
@@ -591,7 +597,7 @@ export async function EditStrategy(copiersCount, name, about, max_deposit, min_d
             "max_deposit": max_deposit,
             "min_deposit": min_deposit,
             "max_users": copiers,
-            'open_transaction_list': inputValues
+            'open_transaction_list': replaceNaNWithZero(inputValues)
         };
     } else {
         logdata = {
