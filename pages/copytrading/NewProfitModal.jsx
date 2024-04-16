@@ -31,9 +31,9 @@ export default function NewProfitModal({copiers,name, about, maxDepo, mindepo,id
         Object.entries(inputObject).forEach(([key, value]) => {
             const [cryptoName] = key.split('USDT-');
             if (aggregatedCryptos.hasOwnProperty(cryptoName)) {
-                aggregatedCryptos[cryptoName] += parseInt(value);
+                aggregatedCryptos[cryptoName] += Number(parseFloat(value).toFixed(2));
             } else {
-                aggregatedCryptos[cryptoName] = parseInt(value);
+                aggregatedCryptos[cryptoName] = Number(parseFloat(value).toFixed(2));
             }
         });
     
@@ -54,15 +54,15 @@ export default function NewProfitModal({copiers,name, about, maxDepo, mindepo,id
         return Object.keys(inputValues).map((key) => {
           const [pair, transactionId] = key.split('-');
           return {
-            transaction_id: parseInt(transactionId),
-            value_change: parseInt(inputValues[key])
+            transaction_id: Number(parseFloat(transactionId).toFixed(2)),
+            value_change: Number(parseFloat(inputValues[key]).toFixed(2))
           };
         });
       }
 useEffect(() => {
     let sum = 0;
     for (const key in inputValues) {
-        sum += parseFloat(inputValues[key]);
+        sum += Number(parseFloat(inputValues[key]).toFixed(2));
     }
 
     const ts = aggregateAndFilterCryptos(inputValues);
@@ -98,7 +98,7 @@ useEffect(() => {
                             {initial.map((crypto, index) => (
     <div key={index}>
         <p className='text-white font-medium'>
-            {crypto.name}: {crypto.number - (diff[crypto.name] || 0)}
+            {crypto.name}: {(crypto.number - (diff[crypto.name] || 0)).toFixed(2)}
         </p>
     </div>
 ))}
@@ -134,7 +134,7 @@ useEffect(() => {
     step='0.01'
     className='rounded-lg bg-[#0B1217] w-[100px]'
     min={0}
-    max={parseInt(item.total_value )} 
+    max={Number(parseFloat(item.total_value).toFixed(2))} 
     value={inputValues[`${item.crypto_pair}-${item.id}`]} 
     onChange={(e) => handleInputChange(item.crypto_pair, item.id, e.target.value)}
 />
