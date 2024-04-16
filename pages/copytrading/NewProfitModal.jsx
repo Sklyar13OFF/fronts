@@ -4,12 +4,12 @@ import {  EditStrategy } from "../../api/ApiWrapper";
 export default function NewProfitModal({copiers,name, about, maxDepo, mindepo,id, depos, copierss, isOpen, tx, onCloseModal, array }) {
     function createZeroArray(initialArray) {
         const zeroArray = {};
-        if (Array.isArray(initialArray)){
+        if(Array.isArray(initialArray)){
             initialArray.forEach(crypto => {
                 zeroArray[crypto.name] = 0;
             });
         }
-     
+   
         return zeroArray;
     }
     
@@ -42,7 +42,7 @@ export default function NewProfitModal({copiers,name, about, maxDepo, mindepo,id
     function subtractValues(object, array) {
         const allZeros = array.every(item => item.number === 0);
         if (allZeros) {
-            return array.map(() => 0); // Return an array of zeros if all values in the array are zeros
+            return array.map(() => 0); 
         } else {
             return array.map(item => object[item.name] - item.number);
         }
@@ -59,22 +59,24 @@ export default function NewProfitModal({copiers,name, about, maxDepo, mindepo,id
           };
         });
       }
-      useEffect(() => {
-        let sum = 0;
-        for (const key in inputValues) {
-            sum += parseFloat(inputValues[key]);
-        }
-    
-        const ts = aggregateAndFilterCryptos(inputValues);
-        setDiff(ts);
-        const updatedFinal = constructArrayFromObject(inputValues);
-        setFinal(updatedFinal);
-    }, [inputValues]);
-    
-    useEffect(() => {
-        setEnabled(isAllZeros(subtractValues(diff, initial)));
-    }, [diff, initial]);
-    
+useEffect(() => {
+    let sum = 0;
+    for (const key in inputValues) {
+        sum += parseFloat(inputValues[key]);
+    }
+
+    const ts = aggregateAndFilterCryptos(inputValues);
+    setDiff(ts);
+    const updatedFinal = constructArrayFromObject(inputValues);
+    console.log(inputValues)
+    console.log(updatedFinal)
+    setFinal(updatedFinal);
+}, [inputValues]);
+
+useEffect(() => {
+    setEnabled(isAllZeros(subtractValues(diff, initial)));
+}, [diff, initial]);
+
     const handleInputChange = (cryptoPair, index, value) => {
         setInputValues(prevState => ({
             ...prevState,
@@ -93,7 +95,7 @@ export default function NewProfitModal({copiers,name, about, maxDepo, mindepo,id
                         <div className="flex flex-col w-full items-start gap-8 p-6">
                             <h5 className="text-white font-bold text-lg">Split up between txs</h5>
                             {/* Render array elements */}
-                            {Array.isArray(initial) && initial.map((crypto, index) => (
+                            {initial.map((crypto, index) => (
     <div key={index}>
         <p className='text-white font-medium'>
             {crypto.name}: {crypto.number - (diff[crypto.name] || 0)}
@@ -121,7 +123,6 @@ export default function NewProfitModal({copiers,name, about, maxDepo, mindepo,id
                                     {tx.map((item, index) => (
                                         <tr key={index} className='h-8'>
                                             <td className='text-center text-white font-medium'>{item.crypto_pair}</td>
-                                            <td className='text-center text-white font-medium'>{item.id}</td>
 
                                             <td className='text-center text-white font-medium'>{item.total_value}%</td>
                                             <td className='text-center text-white font-medium'>{item.side}</td>
@@ -135,7 +136,7 @@ export default function NewProfitModal({copiers,name, about, maxDepo, mindepo,id
     min={0}
     max={parseInt(item.total_value )} 
     value={inputValues[`${item.crypto_pair}-${item.id}`]} 
-    onChange={(e) => handleInputChange(item.crypto_pair, index, e.target.value)}
+    onChange={(e) => handleInputChange(item.crypto_pair, item.id, e.target.value)}
 />
 
                                             </td>

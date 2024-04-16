@@ -561,13 +561,15 @@ export async function EditStrategy(copiersCount, name, about, max_deposit, min_d
     let logdata; // Declare logdata outside of the if statement
     console.log(inputValues)
     const filteredArray = list.filter(item => parseFloat(item.total_value) !== 0);
-    console.log(inputValues,'loool')
+    const filteredArrayWithoutInitKeys = filteredArray.map(({ init_value, init_side, ...rest }) => rest);
+
+    console.log(filteredArrayWithoutInitKeys,'loool')
     if (inputValues) {
         logdata = {
             'total_copiers': copiersCount,
             "name": name,
             "about": about,
-            'cryptos': filteredArray,
+            'cryptos': filteredArrayWithoutInitKeys,
             "max_deposit": max_deposit,
             "min_deposit": min_deposit,
             "max_users": copiers,
@@ -578,7 +580,7 @@ export async function EditStrategy(copiersCount, name, about, max_deposit, min_d
             'total_copiers': copiersCount,
             "name": name,
             "about": about,
-            'cryptos': filteredArray,
+            'cryptos': filteredArrayWithoutInitKeys,
             "max_deposit": max_deposit,
             "min_deposit": min_deposit,
             "max_users": copiers
