@@ -7,7 +7,7 @@ import { ListAvailableStrategies } from "../../api/ApiWrapper";
 import { statsCopy } from "../../api/ApiWrapper";
 import { setStats } from "../../src/features/mainStats/statsSlice";
 import Image from 'next/image';
-export default function TraderModal({ visible,nickname, about, register, id, strategies, photo,  copierscount,maxcopiers }) {
+export default function TraderModal({ visible,nickname, about, register, id, strategies, photo,  copierscount,maxcopiers,deposits }) {
     const dispatch = useDispatch();
     const [isOpen, setIsOpen] = useState(false);
     const [isDelOpen, setIsDelOpen] = useState(false);
@@ -16,14 +16,44 @@ export default function TraderModal({ visible,nickname, about, register, id, str
     const [file, setFile] = useState('');
     const [copiers, setCopiersCount] = useState(copierscount)
     const [maxCopiers, setMaxCopiersCount] = useState(maxcopiers)
-
+    const [deposit,setDeposit] = useState(deposits)
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
     };
- 
-    const handleSubmit = async (username, abouts, id, file, strategiess,copiers,maxcopiers,isVisible) => {
+      useEffect(() => {
+        setStrategies(strategies);
+    }, [strategies]);
+
+   const handleInputChange = (value, index) => {
+    setStrategies(prevStrategies => {
+        const updatedStrategies = prevStrategies.map((strategy, i) => {
+            if (i === index) {
+                // Update the trader_deposit value
+                const updatedStrategy = { ...strategy, trader_deposit: parseFloat(value) };
+                return updatedStrategy;
+            }
+            return strategy;
+        });
+
+        // Calculate the total_deposited value based on updated trader_deposit values
+        const totalDeposited = updatedStrategies.reduce((total, strategy) => {
+            return total + parseFloat(strategy.trader_deposit || 0);
+        }, 0);
+
+        // Update the total_deposited value in each strategy
+        const strategiesWithTotalDeposited = updatedStrategies.map(strategy => ({
+            ...strategy,
+            total_deposited: totalDeposited.toFixed(2) // Assuming total_deposited is a string, round it to 2 decimal places
+        }));
+
+        console.log(strategiesWithTotalDeposited, 'updated strategies');
+        return strategiesWithTotalDeposited;
+    });
+};
+
+    const handleSubmit = async (username, abouts, id, file, strategiess,copiers,maxcopiers,isVisible,deposit) => {
         try {
-            await EditTrader(username, abouts, id, file, strategiess,copiers,maxcopiers,isVisible);
+            await EditTrader(username, abouts, id, file, strategiess,copiers,maxcopiers,isVisible,deposit);
             setIsOpen(false);
             await listAllTraders(dispatch, setTraders);
             await statsCopy(dispatch, setStats);
@@ -48,6 +78,7 @@ export default function TraderModal({ visible,nickname, about, register, id, str
         setStrategiesList(prevState => [...prevState, strategy]);
     };
     const handleMoveToTrader = (strategy) => {
+        console.log(strategy)
         setStrategiesList(prevState => prevState.filter((s) => s.id !== strategy.id));
         setStrategies(prevState => [...prevState, strategy]);
     };
@@ -161,22 +192,33 @@ export default function TraderModal({ visible,nickname, about, register, id, str
                                         <textarea style={{ resize: 'none' }} onChange={(event) => setAbouts(event.target.value)} className='bg-[#0B1217] py-2 px-3 text-white text-sm rounded-lg shadow-lg outline-none w-[350px] h-[90px]' type='password' required >{abouts}</textarea>
                                     </div>
          
-
+                                    <div className='flex gap-1 items-start flex-col'>
+                                        <label className='text-white text-sm ' required>Traders deposit</label>
+                                        <input value={deposit} type="number" onChange={(event) => setDeposit(event.target.value)}  className='bg-[#0B1217] px-3 text-white text-sm rounded-lg shadow-lg outline-none w-[350px] h-[40px]' required />
+                                    </div>
 
 
                                 </div>
                                 <div className="flex flex-col gap-6">
                                 <div className="flex flex-col h-[200px] overflow-y-auto bg-[#0B1217] rounded-xl">
                                         <label className="text-white py-3 px-1 font-medium">Trader Strategies</label>
-                                        {strategiess.map((strategy) => (
-                                            <div
-                                                className={`text-white h-[50px] p-5 border-b border-white rounded-lg flex items-center font-medium bg-[#0B1217]`}
-                                                key={strategy.id}
-                                                onClick={() => handleMoveToAvailable(strategy)}
-                                            >
-                                                {strategy.name}
-                                            </div>
-                                        ))}
+                                        {strategiess.map((strategy, index) => (
+    <div className="flex  justify-between items-center border-b border-white p-5" key={strategy.id}>
+        <div    onClick={() => handleMoveToAvailable(strategy)}
+            className={`text-white h-[50px] p-5  rounded-lg flex items-center font-medium bg-[#0B1217]`}
+            
+        >
+            {strategy.name}
+        </div>
+        <input
+            type="number"
+            className="h-[30px] w-[120px] rounded-xl outline-none text-white bg-[#142028] p-2"
+            value={strategy.trader_deposit}
+            onChange={(e) => handleInputChange(e.target.value, index)}
+        />
+    </div>
+))}
+
                                     </div>
                                     <div className="flex flex-col h-[200px] w-[350px] overflow-y-auto bg-[#0B1217] rounded-xl">
                                         <label className="text-white py-3 px-1 font-medium">Available Strategies</label>
@@ -197,7 +239,7 @@ export default function TraderModal({ visible,nickname, about, register, id, str
                             </div>
                             <div className='flex w-full justify-between mt-4'>
                                 <button onClick={() => setIsOpen(false)} className='text-white font-bold'>Close</button>
-                                <button onClick={() => handleSubmit(username, abouts, id, file, strategiess,copiers,maxCopiers,isVisible)} className='w-[600px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Edit</button>
+                                <button onClick={() => handleSubmit(username, abouts, id, file, strategiess,copiers,maxcopiers,isVisible,deposit)} className='w-[600px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Edit</button>
                             </div>
                         </div>
                     </div>

@@ -3,9 +3,9 @@ import { AddTrader } from "../../api/ApiWrapper";
 import { listOpenTraderTx } from "../../api/ApiWrapper";
 import { listCloseTraderTx } from "../../api/ApiWrapper";
 import ChartComponent from "./StrategiesChart";
-import PieChart from "./PieChart";
 import DepositModal from "./DepositModal";
 import { Mydepos } from "../../api/ApiWrapper";
+import PieChartPerc from "./PieChartPerc";
 export default function CopyModal({ trader }) {
     const [isOpen, setIsOpen] = useState(false);
     const [openTx, setOpentTx] = useState([])
@@ -144,7 +144,7 @@ export default function CopyModal({ trader }) {
                                 </div>
                                 </div>
                                 <div className="flex gap-5">
-                                {trader && <PieChart data={trader.get_cryptos_in_percentage} />}
+                                {trader && <PieChartPerc data={trader.get_cryptos_in_percentage} />}
                                 <div className="grid grid-cols-2 gap-1">
                                             <div className="flex gap-1 text-sm text-white font-bold w-[180px]">
                                                 <label htmlFor="">Registered at</label>

@@ -15,25 +15,30 @@ import { GetTxs } from "../../api/ApiWrapper";
 
 import { listCrypto } from "../../api/ApiWrapper";
 import { statsCopy } from "../../api/ApiWrapper";
-import NewProfitModal from "./NewProfitModal";
 import { setStats } from "../../src/features/mainStats/statsSlice";
-export default function StrategyModal({ depos, custom, current_copiers, name, minDepo, maxDepo, about, id, crypto, selected, maxCopiers, avg_profit, profits }) {
-   
+export default function StrategyModal({ depos, custom, current_copiers, name, minDepo, maxDepo, about, id, crypto, selected, maxCopiers, avg_profit, profits,deposits }) {
+    const [deposit,setDeposit] = useState(deposits)
     const dispatch = useDispatch();
     const [txs,setTxs] = useState([])
     const [isOpen, setIsOpen] = useState(false);
     const [minDepos, setminDepos] = useState(minDepo);
     const [maxDepos, setmaxDepos] = useState(maxDepo);
+    const [inputClass, setInputClass] = useState('');
+
     const [naming, setNaming] = useState(name);
     const [isDelOpen, setIsDelOpen] = useState(false)
     const [cryptoList, setCryptoList] = useState([]);
     const [searchText, setSearchText] = useState('');
     const [selectedList, setSelectedList] = useState(selected);
     const [depositAmounts, setDepositAmounts] = useState(
+       [
+        {name: 'USDT', total_value: '100', side: null, init_value: '100', init_side: null}
 
-       crypto ? crypto.map(item => ({ ...item, init_value: item.total_value, init_side: item.side })) : {}
+       ]
     );
-    
+    const [leftform,setleftform] = useState(
+        crypto ? crypto.map(item => ({ ...item, init_value: item.total_value, init_side: item.side })) : []
+    );
 
     const [abouts, setAbouts] = useState(about)
     const [copiers, setmaxCopiers] = useState(maxCopiers)
@@ -79,16 +84,11 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
         }}
         const handlefirstClick = async (id, changeCrypto, copiersCount, naming, abouts, maxDepos, minDepos, depositAmounts, copiers) => {
             try {
-                const res = await GetTxs(id, changeCrypto);
         
-                if (!res) {
+                
                     await EditStrategy(copiersCount, naming, abouts, maxDepos, minDepos, id, depositAmounts, copiers);
-                    window.location.href=''
                     await statsCopy(dispatch, setStats);
-                } else {
-                    setTxs(res);
-                    setChildModal(true);
-                }
+                
             } catch (error) {
                 console.error('Error occurred:', error);
             }
@@ -118,10 +118,8 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
         
             const isItemInDepositAmounts = depositAmounts.some(i => i.name === item);
         
-            // Update depositAmounts with the new item
             setDepositAmounts(prevState => {
                 if (isItemInDepositAmounts) {
-                    // If the item is already in depositAmounts, update it
                     return prevState.map(i => {
                         if (i.name === item) {
                             return { ...i, total_value: amount, side: side };
@@ -129,7 +127,6 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                         return i;
                     });
                 } else {
-                    // Add the item to depositAmounts
                     return [...prevState, { name: item, total_value: amount, side: side }];
                 }
             });
@@ -149,23 +146,60 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
             
                 console.log(newChangeCrypto); // Log the updated state here
             
-                return newChangeCrypto; // Return the updated state
+                return newChangeCrypto;
             });
-            
+            handleInputChange('ETH',0)
         };
         const handleInputChange = (itemName, amount) => {
             setDepositAmounts(prevState => {
                 const updatedDepositAmounts = prevState.map(item => {
                     if (item.name === itemName) {
+                        return { ...item, total_value: amount !== '' ? parseFloat(amount) : 0 };
+                    }
+                    return item;
+                });
+        
+                // Find the USDT token
+                const usdtToken = updatedDepositAmounts.find(item => item.name === 'USDT');
+        
+                // Calculate the sum of all other tokens
+                const sumOfOtherTokens = updatedDepositAmounts
+                    .filter(item => item.name !== 'USDT')
+                    .reduce((sum, item) => sum + parseFloat(item.total_value), 0);
+        
+                // Calculate the value of USDT based on the sum of other tokens
+                const usdtValue = Math.max(100 - sumOfOtherTokens, 0);
+        
+                // Update the value of the USDT token
+                const updatedUsdtToken = { ...usdtToken, total_value: usdtValue };
+        
+                // Update the input class based on the sum of other tokens
+                if (sumOfOtherTokens > 100) {
+                    setInputClass('border border-red-500'); // Apply red color class
+                } else {
+                    setInputClass(''); // Remove red color class
+                }
+        
+                return updatedDepositAmounts.map(item =>
+                    item.name === 'USDT' ? updatedUsdtToken : item
+                );
+            });
+        };
+        
+    
+        
+        const handleInputleftChange = (itemName, amount) => {
+            setleftform(prevState => {
+                const updatedleftForm = prevState.map(item => {
+                    if (item.name === itemName) {
                         return { ...item, total_value: amount };
                     }
                     return item;
                 });
-                updateChangeCrypto(updatedDepositAmounts);
-                return updatedDepositAmounts;
+                console.log(leftform)
+                return updatedleftForm;
             });
         };
-        
         const handleCheckboxChange = (itemName, side) => {
             setDepositAmounts(prevState => {
                 const updatedDepositAmounts = prevState.map(item => {
@@ -208,7 +242,6 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
 
     return (
         <div>
-{childModal && <NewProfitModal copiers={copiersCount} name={naming} about={abouts} maxDepo={maxDepos} mindepo={minDepos} id={id} depos={depositAmounts} copierss={copiers} isOpen={childModal} tx={txs} onCloseModal={handleCloseModal} array={combinedCryptoArray}/>}
             <div onClick={() => setIsOpen(true)} key={id} className="text-white divi flex flex-col p-5">
                 <div className="flex flex-col gap-2  p-2">
                    
@@ -232,7 +265,9 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                                 <div className="flex items-center ">
                                     <div className="flex flex-col gap-3">
                                         <h5 className='text-2xl text-white font-bold'>Edit strategy</h5>
-
+                                        <div className="w-[200px] h-[50px] flex flex-col items-center justify-center rounded-xl bg-[#0B1217]">
+                                            <span className="text-white text-lg font-bold">Deposit: {deposit} $</span>
+                                        </div>
                                         <div className="flex rounded-2xl w-[300px] items-center bg-[#0B1217]">
                                             <div className='flex gap-1 items-start flex-col'>
                                                 <input type='number' value={minDepos} onChange={(event) => setminDepos(event.target.value)} className='bg-[#0B1217] px-3 text-white font-medium text-xl rounded-lg shadow-lg outline-none w-[130px] text-right h-[50px]' required />
@@ -279,15 +314,15 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                                 )}
                             </div>
                             <div className='flex flex-col gap-4'>
-                                <div className="flex  gap-4">
+                                <div className="flex  gap-5">
                                     <div className="flex flex-col gap-4">
-                                        <div className='flex gap-2 items-start flex-col rounded-lg bg-[#0B1217] p-3'>
+                                        <div className='flex gap-2 items-start flex-col w-[345px] rounded-lg bg-[#0B1217] p-3'>
                                             <label className='text-white font-medium text-sm' >Name</label>
-                                            <input onChange={(event) => setNaming(event.target.value)} value={naming} className='bg-[#0B1217] border-t border-white text-white text-sm rounded-b-lg shadow-lg outline-none w-[350px] h-[40px]' required />
+                                            <input onChange={(event) => setNaming(event.target.value)} value={naming} className='bg-[#0B1217] border-t border-white text-white text-sm rounded-b-lg shadow-lg outline-none w-[320px] h-[40px]' required />
                                         </div>
-                                        <div className='flex gap-2 items-start flex-col rounded-lg bg-[#0B1217] p-3'>
+                                        <div className='flex gap-2 items-start flex-col w-[345px] rounded-lg bg-[#0B1217] p-3'>
                                             <label className='text-white font-medium text-sm' >About</label>
-                                            <textarea style={{ resize: 'none' }} onChange={(event) => setAbouts(event.target.value)} className='bg-[#0B1217] border-t border-white py-2 px-3 text-white text-sm rounded-b-lg shadow-lg outline-none w-[350px] h-[80px]' type='password' required >{abouts}</textarea>
+                                            <textarea style={{ resize: 'none' }} onChange={(event) => setAbouts(event.target.value)} className='bg-[#0B1217] border-t border-white py-2 px-3 text-white text-sm rounded-b-lg shadow-lg outline-none w-[320px] h-[80px]' type='password' required >{abouts}</textarea>
                                         </div>
 
                                     </div>
@@ -313,7 +348,33 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                                     </div>
 
                                 </div>
-                                <div className="flex flex-col items-start bg-[#0B1217] rounded-lg px-3 py-1 gap-1">
+       
+
+                <div className="flex gap-5 w-full items-center">
+                <div className="flex flex-col items-start bg-[#0B1217] w-1/2 rounded-lg px-3 py-1 gap-1">
+                                    <label className='text-white text-sm font-bold'>Close cryptos</label>
+                                    <div className="h-[200px] w-full bg-[#0B1217] rounded-lg overflow-y-auto">
+                                    {leftform.map((item, index) => (
+    <div key={index} className="flex items-center h-[60px] px-5 justify-between border-b border-white">
+        <div className="flex items-center gap-1">
+            <Image width={26} height={26} src={`/assets/icons/${(item.name).toLowerCase()}.png`} />
+            <span className="text-white font-medium text-sm">{item.name}</span>
+        </div>
+        <input
+    type="number"
+    value={item.total_value}
+    readOnly={item.name=='USDT'?true:false}
+    className={`w-[100px] px-2 text-white rounded-lg text-sm bg-[#142028] outline-none ${
+        ((parseFloat(item.total_value) > parseFloat(item.init_value))||item.total_value<=0) ? 'border border-red-500' : ''
+    }`}
+    onChange={(e) => handleInputleftChange(item.name, e.target.value)}
+/>
+    </div>
+))}
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col w-1/2 items-start bg-[#0B1217] rounded-lg px-3 py-1 gap-1">
                                     <label className='text-white text-sm font-bold'>Selected cryptos</label>
                                     <div className="h-[200px] w-full bg-[#0B1217] rounded-lg overflow-y-auto">
                                     {depositAmounts.map((item, index) => (
@@ -326,21 +387,31 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
             <label className="switch">
                 <input
                     type="checkbox"
+                                        
                     checked={item.side === 'long'}
                     onChange={(e) => handleCheckboxChange(item.name, e.target.checked ? 'long' : 'short')}
                 />
             </label>
         }
-        <input
+ <input
             type="number"
+            readOnly={item.name === 'USDT' ? true : false}
             value={item.total_value}
-            className="w-[100px] px-2 text-white rounded-lg text-sm bg-[#142028] outline-none"
+            max={item.total_value}
+            className={`w-[100px] px-2 text-white rounded-lg text-sm bg-[#142028] outline-none ${inputClass}`}
             onChange={(e) => handleInputChange(item.name, e.target.value)}
         />
     </div>
 ))}
                                     </div>
-                                </div>
+                                </div>               
+                </div>
+                           
+
+
+
+
+
                                 <div className='flex w-full justify-between mt-8'>
                                     <button onClick={() => setIsOpen(false)} className='text-white font-bold'>Close</button>
                                     <button onClick={() => handlefirstClick(id,changeCrypto,copiersCount, naming, abouts, maxDepos, minDepos, depositAmounts, copiers)} className='w-[470px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Edit</button>

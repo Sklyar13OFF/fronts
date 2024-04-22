@@ -428,74 +428,105 @@ export async function CheckPing(key) {
     }
     return false;
 }
-export async function AddTrader(nickname, about, photo, strategiess) {
-    const strategiesJson = JSON.stringify(strategiess);
 
-    const formData = new FormData();
-    formData.append('nickname', nickname);
-    formData.append('about', about);
-    
-    // Parse JSON string back into an array
-    const strategiesArray = JSON.parse(strategiesJson);
-    
-    // Extract strategy ids from the array
-    const strategyIds = strategiesArray.map(strategy => strategy.id);
-    
-    // Convert ids array to comma-separated string
-    const strategyIdsString = strategyIds.join(',');
-    
-    formData.append('strategies_id', strategyIdsString); // Append the serialized array
+export async function AddTrader(nickname, about, photo, strategiess, deposit) {
+    const strategiesIdArray = strategiess.map(strategy => ({
+        id: strategy.id,
+        trader_deposit: strategy.trader_deposit
+    }));
 
-    if (photo !== null) {
-        formData.append('photo', photo);
-    }
-
-    try {
-        const response = await fetch(`${BASE_URL}traders/`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Token ${getCookieValue('key')}`
-            },
-            body: formData,
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            console.log('Trader added successfully:', data);
-        } else {
-            console.error('Failed to add trader');
+    const logdata = {
+        'nickname': nickname,
+        'about': about,
+        'deposit':deposit,
+        'strategies_id':strategiesIdArray
+    };
+    // If photo is not defined, send JSON data directly
+    if (photo === null ) {
+        try {
+            const response = await fetch(`${BASE_URL}traders/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${getCookieValue('key')}`
+                },
+                body: JSON.stringify(logdata),
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Trader added successfully:', data);
+            } else {
+                console.error('Failed to add trader');
+            }
+        } catch (error) {
+            console.error('Error:', error);
         }
-    } catch (error) {
-        console.error('Error:', error);
+    } else {
+        // If photo is defined, send FormData
+        const strategiesIdArray = strategiess.map(strategy => ({
+            id: strategy.id,
+            trader_deposit: strategy.trader_deposit
+        }));
+        
+        const formData = transformStrategiesArrayToFormData(strategiesIdArray);
+    
+        formData.append('nickname', nickname);
+        formData.append('about', about);
+        formData.append('deposit', deposit);
+    
+        if (photo !== null) {
+            formData.append('photo', photo);
+        }
+        
+        try {
+            const response = await fetch(`${BASE_URL}traders/`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Token ${getCookieValue('key')}`
+                },
+                body: formData,
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Trader added successfully:', data);
+            } else {
+                console.error('Failed to add trader');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     }
 }
 
 
 
-export async function EditTrader(nickname, about, id, photo, strategiess,copiers,maxcopiers,isVisible) {
+export async function EditTrader(nickname, about, id, photo, strategiess,copiers,maxcopiers,isVisible,deposit) {
     let textData
-
     if (strategiess) {
-        const ids = strategiess.map(item => item.id);
-        console.log(typeof ids)
-        console.log(ids)
-
+        const strategiesData = strategiess.map(item => ({
+            id: item.id,
+            trader_deposit: item.trader_deposit
+        }));
         textData = {
             nickname: nickname,
+            deposit:deposit,
             about: about,
-            strategies_id: ids,
+            strategies_id: strategiesData,
             copiers_count:copiers,
             max_copiers:maxcopiers,
             visible:isVisible
         };
     } else {
         textData = {
+            deposit:deposit,
             nickname: nickname,
             about: about,
             copiers_count:copiers,
             max_copiers:maxcopiers,
-            visible:isVisible
-
+            visible:isVisible,
+            strategies_id:[]
 
         };
     }
@@ -693,14 +724,19 @@ export async function DelStrategy(id) {
     }
 }
 export async function AddNewStrategy(name, about, max_deposit, min_deposit, list) {
+    const updatedDepositAmounts = list.map(item => ({
+        ...item,
+        side: 'long'
+      }));
+      
     const logdata = {
         'name': name,
         'about': about,
         'max_deposit': max_deposit,
         'min_deposit': min_deposit,
-        'cryptos': list
+        'cryptos': updatedDepositAmounts
     };
-    console.log(list)
+ 
     try {
         const response = await fetch(`${BASE_URL}strategies/`, {
             method: 'POST',

@@ -68,7 +68,7 @@ export default function CopyTrading() {
                                 <AddTraderModal />
                                 <div className="bg-[#142028] overflow-y-auto w-full h-full rounded-b-xl shadow-lg flex flex-col">
                                     {traders && traders.map((trader) => (
-                                        <TraderModal visible={trader.visible} key={trader.id} maxcopiers={trader.max_copiers} copierscount={trader.copiers_count} id={trader.id} nickname={trader.nickname} about={trader.about} register={trader.date_of_registration} photo={trader.photo} strategies={trader.strategies} />
+                                        <TraderModal visible={trader.visible} key={trader.id} maxcopiers={trader.max_copiers} copierscount={trader.copiers_count} id={trader.id} nickname={trader.nickname} about={trader.about} register={trader.date_of_registration} photo={trader.photo} strategies={trader.strategies} deposits={trader.deposit}/>
                                     ))}
                                 </div>
                             </div>
@@ -76,7 +76,7 @@ export default function CopyTrading() {
                                 <AddStrategyModal />
                                 <div className="bg-[#142028] w-full h-full rounded-b-xl overflow-y-auto shadow-lg flex flex-col">
                                     {strategies && strategies.map((strategy) => (
-                                        <StrategyModal profits={strategy.profits} depos={strategy.total_deposited} custom={strategy.custom_avg_profit} key={strategy.id} current_copiers={strategy.total_copiers} maxCopiers={strategy.max_users} name={strategy.name} about={strategy.about} crypto={strategy.cryptos} minDepo={strategy.min_deposit} maxDepo={strategy.max_deposit} id={strategy.id} avg_profit={strategy.avg_profit} selected={(strategy.cryptos).map(crypto => crypto.name)} />
+                                        <StrategyModal profits={strategy.profits} depos={strategy.total_deposited} custom={strategy.custom_avg_profit} key={strategy.id} current_copiers={strategy.total_copiers} maxCopiers={strategy.max_users} name={strategy.name} about={strategy.about} crypto={strategy.cryptos} minDepo={strategy.min_deposit} maxDepo={strategy.max_deposit} id={strategy.id} avg_profit={strategy.avg_profit} selected={(strategy.cryptos).map(crypto => crypto.name)} deposits={strategy.trader_deposit}/>
                                     ))}
                                 </div>
                             </div>
