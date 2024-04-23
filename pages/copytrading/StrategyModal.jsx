@@ -16,7 +16,7 @@ import { GetTxs } from "../../api/ApiWrapper";
 import { listCrypto } from "../../api/ApiWrapper";
 import { statsCopy } from "../../api/ApiWrapper";
 import { setStats } from "../../src/features/mainStats/statsSlice";
-export default function StrategyModal({ depos, custom, current_copiers, name, minDepo, maxDepo, about, id, crypto, selected, maxCopiers, avg_profit, profits,deposits }) {
+export default function StrategyModal({ depos, custom, current_copiers, name, minDepo, maxDepo, about, id, crypto, selected, maxCopiers, avg_profit, profits,deposits,pool }) {
     const [deposit,setDeposit] = useState(deposits)
     const dispatch = useDispatch();
     const [txs,setTxs] = useState([])
@@ -24,7 +24,7 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
     const [minDepos, setminDepos] = useState(minDepo);
     const [maxDepos, setmaxDepos] = useState(maxDepo);
     const [inputClass, setInputClass] = useState('');
-
+    const [newCrypto,setNewCrypto] = useState([])
     const [naming, setNaming] = useState(name);
     const [isDelOpen, setIsDelOpen] = useState(false)
     const [cryptoList, setCryptoList] = useState([]);
@@ -32,7 +32,7 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
     const [selectedList, setSelectedList] = useState(selected);
     const [depositAmounts, setDepositAmounts] = useState(
        [
-        {name: 'USDT', total_value: '100', side: null, init_value: '100', init_side: null}
+        {name: 'USDT', total_value: '100', side: 'short', init_value: '100', init_side: null}
 
        ]
     );
@@ -82,11 +82,11 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
             // Handle errors here
             console.error('Error in handleSubmit:', error);
         }}
-        const handlefirstClick = async (id, changeCrypto, copiersCount, naming, abouts, maxDepos, minDepos, depositAmounts, copiers) => {
+        const handlefirstClick = async (id, changeCrypto, copiersCount, naming, abouts, maxDepos, minDepos, depositAmounts,leftform, copiers) => {
             try {
         
                 
-                    await EditStrategy(copiersCount, naming, abouts, maxDepos, minDepos, id, depositAmounts, copiers);
+                    await EditStrategy(copiersCount, naming, abouts, maxDepos, minDepos, id, depositAmounts,leftform, copiers);
                     await statsCopy(dispatch, setStats);
                 
             } catch (error) {
@@ -130,7 +130,6 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                     return [...prevState, { name: item, total_value: amount, side: side }];
                 }
             });
-        
             setChangeCrypto(prevChangeCrypto => {
                 const newChangeCrypto = depositAmounts.reduce((acc, item) => {
                     const { init_value: initialDepositAmount, init_side: initialSide } = item;
@@ -148,7 +147,7 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
             
                 return newChangeCrypto;
             });
-            handleInputChange('ETH',0)
+       
         };
         const handleInputChange = (itemName, amount) => {
             setDepositAmounts(prevState => {
@@ -208,7 +207,9 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                     }
                     return item;
                 });
+                console.log(updatedDepositAmounts,'updated dolbayob')
                 updateChangeCrypto(updatedDepositAmounts);
+                setDepositAmounts(updatedDepositAmounts)
                 return updatedDepositAmounts;
             });
         };
@@ -222,12 +223,12 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                 const { init_value: initialDepositAmount, init_side: initialSide, side: currentSide } = item;
                 if (parseFloat(item.total_value) < parseFloat(initialDepositAmount) && initialSide === 'long') {
                     if (!acc.includes(item.name) && currentSide === initialSide) {
-                        return [...acc, item.name];
+                        return [...acc, { name: item.name, side: item.side }]; // Include side in the result
                     }
                 }
                 return acc;
             }, []);
-            console.log(newChangeCrypto); // Log the updated state here
+            console.log(newChangeCrypto);
             setChangeCrypto(newChangeCrypto);
         };
         
@@ -267,6 +268,9 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                                         <h5 className='text-2xl text-white font-bold'>Edit strategy</h5>
                                         <div className="w-[200px] h-[50px] flex flex-col items-center justify-center rounded-xl bg-[#0B1217]">
                                             <span className="text-white text-lg font-bold">Deposit: {deposit} $</span>
+                                        </div>
+                                        <div className="w-[300px] h-[50px] flex flex-col items-left p-5 justify-center rounded-xl bg-[#0B1217]">
+                                            <span className="text-white text-lg font-bold">Available pool: {pool} $</span>
                                         </div>
                                         <div className="flex rounded-2xl w-[300px] items-center bg-[#0B1217]">
                                             <div className='flex gap-1 items-start flex-col'>
@@ -414,7 +418,7 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
 
                                 <div className='flex w-full justify-between mt-8'>
                                     <button onClick={() => setIsOpen(false)} className='text-white font-bold'>Close</button>
-                                    <button onClick={() => handlefirstClick(id,changeCrypto,copiersCount, naming, abouts, maxDepos, minDepos, depositAmounts, copiers)} className='w-[470px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Edit</button>
+                                    <button onClick={() => handlefirstClick(id,changeCrypto,copiersCount, naming, abouts, maxDepos, minDepos, depositAmounts, leftform,copiers)} className='w-[470px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Edit</button>
                                 </div>
                             </div>
                         </div>  

@@ -612,7 +612,7 @@ const replaceNaNWithZero = (inputValues) => {
     }));
 };
 
-export async function EditStrategy(copiersCount, name, about, max_deposit, min_deposit, id, list, copiers, inputValues) {
+export async function EditStrategy(copiersCount, name, about, max_deposit, min_deposit, id, list,leftform, copiers, inputValues) {
     let logdata; // Declare logdata outside of the if statement
     console.log(inputValues)
     const filteredArray = list.filter(item => parseFloat(item.total_value) !== 0);
@@ -624,7 +624,8 @@ export async function EditStrategy(copiersCount, name, about, max_deposit, min_d
             'total_copiers': copiersCount,
             "name": name,
             "about": about,
-            'cryptos': filteredArrayWithoutInitKeys,
+            'cryptos': leftform,
+            'new_cryptos':filteredArrayWithoutInitKeys,
             "max_deposit": max_deposit,
             "min_deposit": min_deposit,
             "max_users": copiers,
@@ -635,7 +636,9 @@ export async function EditStrategy(copiersCount, name, about, max_deposit, min_d
             'total_copiers': copiersCount,
             "name": name,
             "about": about,
-            'cryptos': filteredArrayWithoutInitKeys,
+            'cryptos': leftform,
+            'new_cryptos':filteredArrayWithoutInitKeys,
+
             "max_deposit": max_deposit,
             "min_deposit": min_deposit,
             "max_users": copiers
