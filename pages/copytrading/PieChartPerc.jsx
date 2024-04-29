@@ -3,7 +3,7 @@ import { Pie } from 'react-chartjs-2';
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
 
 // Register necessary components and plugins
-Chart.register(ArcElement, Tooltip, Legend, ChartDataLabels);
+Chart.register(ArcElement, Tooltip, Legend);
 
 const PieChartPerc = ({ data }) => {
     if (!data) {
