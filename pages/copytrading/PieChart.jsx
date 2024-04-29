@@ -1,7 +1,6 @@
 import React from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart, ArcElement } from 'chart.js';
-import 'chartjs-plugin-datalabels'; // Import the datalabels plugin
 Chart.register(ArcElement);
 
 const PieChart = ({ data }) => {
@@ -24,7 +23,6 @@ const PieChart = ({ data }) => {
     const colors = Array.from({ length: labels.length }, () => generateRandomBlueShade());
 
     const chartData = {
-        labels: labels,
         datasets: [
             {
                 data: percentages,
@@ -34,31 +32,11 @@ const PieChart = ({ data }) => {
         ],
     };
 
-    const options = {
-        plugins: {
-            legend: {
-                display: true,
-                position: 'right',
-                labels: {
-                    font: {
-                        size: 14,
-                    },
-                },
-            },
-            datalabels: { // Configure the datalabels plugin
-                color: '#fff', // Set color for the labels
-                formatter: (value, context) => {
-                    const labelIndex = context.dataIndex;
-                    return context.chart.data.labels[labelIndex];
-                }
-            }
-        },
-    };
-
+ 
     return (
         <div className='flex flex-col h-[500px] overflow-y-auto p-4 gap-5'>
             <h5 className='text-white text-center font-bold text-xl'>Assets in strategies ratio</h5>
-            <Pie data={chartData} options={options} />
+            <Pie data={chartData}  />
             <div>
                 {Object.entries(data).map(([key, value], index) => (
                     <div key={index} className="flex justify-between items-center">

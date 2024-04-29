@@ -60,7 +60,7 @@ export default function ChangeProfitModal({ custom, profit, id }) {
                                     <span className={`${profitChange < 0 ? 'text-red-500' : 'text-green-500'} font-bold text-xl `}>{profitChange} %</span>
                                 </div>
                                 <div className="flex flex-col gap-3">
-                                    <Slider step={0.01} min={-10} max={10} value={profitChange} handleStyle={{
+                                    <Slider step={0.01} min={-1.5} max={1.5} value={profitChange} handleStyle={{
                                         borderColor: "white",
                                         height: 20,
                                         width: 20,

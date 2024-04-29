@@ -204,12 +204,17 @@ export default function TraderModal({ visible,nickname, about, register, id, str
                                         <label className="text-white py-3 px-1 font-medium">Trader Strategies</label>
                                         {strategiess.map((strategy, index) => (
     <div className="flex  justify-between items-center border-b border-white p-5" key={strategy.id}>
-        <div    onClick={() => handleMoveToAvailable(strategy)}
-            className={`text-white h-[50px] p-5  rounded-lg flex items-center font-medium bg-[#0B1217]`}
-            
-        >
-            {strategy.name}
+        <div className="flex items-center gap-2">
+        <button onClick={() => handleMoveToAvailable(strategy)}  className="bg-white hover:opacity-80 rounded-full h-[30px] w-[30px]">
+                                                <img  className='h-full w-full' src="/assets/icons/chevron_down.svg" alt="" />
+
+                                                </button>
+                                                <span className="text-white font-medium">
+   {strategy.name}
+
+   </span>
         </div>
+
         <input
             type="number"
             className="h-[30px] w-[120px] rounded-xl outline-none text-white bg-[#142028] p-2"
@@ -225,9 +230,9 @@ export default function TraderModal({ visible,nickname, about, register, id, str
 
                                         {strategiesList && strategiesList.map((strategy) => (
                                             <div
-                                                className={`text-white h-[50px] p-5 border-b border-white rounded-lg flex items-center font-medium ${strategiess && strategiess.some((s) => s.id === strategy.id) ? 'bg-red-500' : 'bg-[#0B1217]'}`}
+                                                className={`text-white cursor-pointer h-[50px] p-5 border-b border-white  flex items-center font-medium `}
                                                 key={strategy.id}
-                                                onClick={() => handleMoveToTrader(strategy)} // Move to trader list
+                                                onClick={() => handleMoveToTrader(strategy)}
                                             >
                                                 {strategy.name}
                                             </div>
@@ -239,7 +244,7 @@ export default function TraderModal({ visible,nickname, about, register, id, str
                             </div>
                             <div className='flex w-full justify-between mt-4'>
                                 <button onClick={() => setIsOpen(false)} className='text-white font-bold'>Close</button>
-                                <button onClick={() => handleSubmit(username, abouts, id, file, strategiess,copiers,maxcopiers,isVisible,deposit)} className='w-[600px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Edit</button>
+                                <button onClick={() => handleSubmit(username, abouts, id, file, strategiess,copiers,maxCopiers,isVisible,deposit)} className='w-[600px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Edit</button>
                             </div>
                         </div>
                     </div>

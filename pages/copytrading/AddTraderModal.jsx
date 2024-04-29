@@ -117,6 +117,13 @@ export default function AddTraderModal() {
                                         <label className="text-white py-3 px-1 font-medium">Trader Strategies</label>
                                         {strategiess && strategiess.map((strategy,index) => (
                                             <div key={index} className="flex justify-between px-5 border-b border-white">
+                                                <div className="flex items-start gap-2">
+                                                <button onClick={() => handleMoveToAvailable(strategy)}  className="bg-white hover:opacity-80 rounded-full h-[30px] w-[30px]">
+                                                <img  className='h-full w-full' src="/assets/icons/chevron_down.svg" alt="" />
+
+                                                </button>
+                                                </div>
+                                
                                             <div
                                                 className={`text-white h-[50px] p-5  rounded-lg flex items-center font-medium bg-[#0B1217]`}
                                                 key={strategy.id}
