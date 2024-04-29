@@ -30,7 +30,7 @@ const LineChart = ({ data }) => {
                     color: 'rgba(255, 255, 255, 0.1)',
                 },
                 ticks: {
-                    color: 'white',
+                    display: false, // Hide x-axis tick labels
                 },
             },
             y: {
@@ -42,13 +42,16 @@ const LineChart = ({ data }) => {
                     color: 'rgba(255, 255, 255, 0.1)',
                 },
                 ticks: {
-                    color: 'white',
+                    display: false, // Hide y-axis tick labels
                 },
             },
         },
         plugins: {
             legend: {
                 display: false,
+            },
+            tooltip: {
+                enabled: false, // Disable tooltips
             },
         },
     };
