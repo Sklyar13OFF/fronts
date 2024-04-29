@@ -1,7 +1,6 @@
 import React from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
-import ChartDataLabels from 'chartjs-plugin-datalabels'; // Corrected import for datalabels plugin
 
 // Register necessary components and plugins
 Chart.register(ArcElement, Tooltip, Legend, ChartDataLabels);
