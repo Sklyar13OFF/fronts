@@ -17,7 +17,6 @@ const LineChart = ({ data }) => {
             },
         ],
     };
-
     const options = {
         scales: {
             x: {
@@ -30,7 +29,8 @@ const LineChart = ({ data }) => {
                     color: 'rgba(255, 255, 255, 0.1)',
                 },
                 ticks: {
-                    display: false, // Hide x-axis tick labels
+                    display: false, // Explicitly hide x-axis tick labels
+                    maxTicksLimit: 0, // Attempt to limit the number of ticks to 0
                 },
             },
             y: {
@@ -42,7 +42,8 @@ const LineChart = ({ data }) => {
                     color: 'rgba(255, 255, 255, 0.1)',
                 },
                 ticks: {
-                    display: false, // Hide y-axis tick labels
+                    display: false, // Explicitly hide y-axis tick labels
+                    maxTicksLimit: 0, // Attempt to limit the number of ticks to 0
                 },
             },
         },
@@ -55,7 +56,6 @@ const LineChart = ({ data }) => {
             },
         },
     };
-
     return (
         <div className='flex flex-col h-full w-full overflow-y-auto p-4 gap-5'>
             <Line data={chartData} options={options} />
