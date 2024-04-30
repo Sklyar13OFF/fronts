@@ -549,7 +549,7 @@ export async function AddTrader(nickname, about, photo, strategiess, deposit) {
 
 
 
-export async function EditTrader(nickname, about, id, photo, strategiess,copiers,maxcopiers,isVisible,deposit) {
+export async function EditTrader(nickname, about, id, photo, strategiess,maxcopiers,isVisible,deposit) {
     let textData
     if (strategiess) {
         const strategiesData = strategiess.map(item => ({
@@ -561,7 +561,6 @@ export async function EditTrader(nickname, about, id, photo, strategiess,copiers
             deposit:deposit,
             about: about,
             strategies_id: strategiesData,
-            copiers_count:parseInt(copiers),
             max_copiers:maxcopiers,
             visible:isVisible
         };
@@ -570,7 +569,6 @@ export async function EditTrader(nickname, about, id, photo, strategiess,copiers
             deposit:deposit,
             nickname: nickname,
             about: about,
-            copiers_count:parseInt(copiers),
             max_copiers:maxcopiers,
             visible:isVisible,
             strategies_id:[]

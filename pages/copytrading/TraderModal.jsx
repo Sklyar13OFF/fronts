@@ -51,9 +51,9 @@ export default function TraderModal({ visible,nickname, about, register, id, str
     });
 };
 
-    const handleSubmit = async (username, abouts, id, file, strategiess,copiers,maxcopiers,isVisible,deposit) => {
+    const handleSubmit = async (username, abouts, id, file, strategiess,maxcopiers,isVisible,deposit) => {
         try {
-            await EditTrader(username, abouts, id, file, strategiess,copiers,maxcopiers,isVisible,deposit);
+            await EditTrader(username, abouts, id, file, strategiess,maxcopiers,isVisible,deposit);
             setIsOpen(false);
             await listAllTraders(dispatch, setTraders);
             await statsCopy(dispatch, setStats);
@@ -169,15 +169,10 @@ export default function TraderModal({ visible,nickname, about, register, id, str
 </div>
                                     </div>
                                     
-                                    <div className="flex rounded-2xl w-[300px] items-center bg-[#0B1217]">
+                                    <div className="flex rounded-2xl w-[160px] items-center bg-[#0B1217]">
+                                    
                                             <div className='flex gap-1 items-start flex-col'>
-                                                <input type='number' value={copiers} onChange={(event) => setCopiersCount(event.target.value)} className='bg-[#0B1217] px-3 text-white font-medium text-xl rounded-lg shadow-lg outline-none w-[130px] text-right h-[50px]' required />
-                                            </div>
-                                            <div className="text-white font-bold">
-                                                /
-                                            </div>
-                                            <div className='flex gap-1 items-start flex-col'>
-                                                <input type='number' value={maxCopiers} onChange={(event) => setMaxCopiersCount(event.target.value)} className=' bg-[#0B1217] px-3 text-white text-xl font-medium rounded-lg shadow-lg outline-none w-[130px] h-[50px]' required />
+                                                <input type='number' value={maxCopiers} onChange={(event) => setMaxCopiersCount(event.target.value)} className=' bg-[#0B1217] px-3 text-white text-xl font-medium rounded-lg shadow-lg outline-none w-[100px] h-[50px]' required />
                                             </div>
                                             <Image height={26} width={26} src='/assets/icons/user.svg' />
                                         </div>
@@ -244,7 +239,7 @@ export default function TraderModal({ visible,nickname, about, register, id, str
                             </div>
                             <div className='flex w-full justify-between mt-4'>
                                 <button onClick={() => setIsOpen(false)} className='text-white font-bold'>Close</button>
-                                <button onClick={() => handleSubmit(username, abouts, id, file, strategiess,copiers,maxCopiers,isVisible,deposit)} className='w-[600px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Edit</button>
+                                <button onClick={() => handleSubmit(username, abouts, id, file, strategiess,maxCopiers,isVisible,deposit)} className='w-[600px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Edit</button>
                             </div>
                         </div>
                     </div>
