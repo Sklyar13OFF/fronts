@@ -266,6 +266,7 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                                         <div className="w-[300px] h-[50px] flex flex-col items-left p-5 justify-center rounded-xl bg-[#0B1217]">
                                             <span className="text-white text-lg font-bold">Available pool: {pool} $</span>
                                         </div>
+                                
                                         <div className="flex rounded-2xl w-[300px] items-center bg-[#0B1217]">
                                             <div className='flex gap-1 items-start flex-col'>
                                                 <input type='number' value={minDepos} onChange={(event) => setminDepos(event.target.value)} className='bg-[#0B1217] px-3 text-white font-medium text-xl rounded-lg shadow-lg outline-none w-[130px] text-right h-[50px]' required />
@@ -277,6 +278,10 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                                                 <input type='number' value={maxDepos} onChange={(event) => setmaxDepos(event.target.value)} className=' bg-[#0B1217] px-3 text-white text-xl font-medium rounded-lg shadow-lg outline-none w-[130px] h-[50px]' required />
                                             </div>
                                             <span className="text-white font-bold text-2xl">$</span>
+                                        </div>
+                                        <div className='flex gap-2 items-start flex-col w-[300px] rounded-lg bg-[#0B1217] p-3'>
+                                            <label className='text-white font-medium text-sm' >Total Copiers</label>
+                                            <input onChange={(event) => setCopiersCount(event.target.value)} value={copiersCount} className='bg-[#0B1217] border-t border-white text-white text-sm rounded-b-lg shadow-lg outline-none w-[250px] h-[40px]' required />
                                         </div>
                                     </div>
 
@@ -318,6 +323,7 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                                             <label className='text-white font-medium text-sm' >Name</label>
                                             <input onChange={(event) => setNaming(event.target.value)} value={naming} className='bg-[#0B1217] border-t border-white text-white text-sm rounded-b-lg shadow-lg outline-none w-[320px] h-[40px]' required />
                                         </div>
+                            
                                         <div className='flex gap-2 items-start flex-col w-[345px] rounded-lg bg-[#0B1217] p-3'>
                                             <label className='text-white font-medium text-sm' >About</label>
                                             <textarea style={{ resize: 'none' }} onChange={(event) => setAbouts(event.target.value)} className='bg-[#0B1217] border-t border-white py-2 px-3 text-white text-sm rounded-b-lg shadow-lg outline-none w-[320px] h-[80px]' type='password' required >{abouts}</textarea>
