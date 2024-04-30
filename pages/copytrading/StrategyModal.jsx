@@ -367,7 +367,7 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
         </div>
         <button className={`h-4 w-4 rounded-full ${item.side=='long'?'bg-[#1DA77D]':'bg-[#E81B1B]'}`}></button>
    
-<span className="font-bold text-white text-sm">{item.init_value}</span>
+<span className="font-bold text-white text-sm">{item.init_value}%</span>
     </div>
  <div className="flex flex-col gap-3 items-center">
  <Slider
@@ -386,7 +386,7 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
   onChange={(value) => handleInputleftChange(item.name, value)}
 />
 <span className="text-white font-bold">
-                                     {item.total_value}
+                                     {item.total_value}%
                                         </span>  
  </div>
 
