@@ -12,6 +12,7 @@ import { ListAvailableStrategies } from "../../api/ApiWrapper";
 import '../globals.css'
 import ChangeProfitModal from "./ChangeProfitModal";
 import { GetTxs } from "../../api/ApiWrapper";
+import Slider from "rc-slider";
 
 import { listCrypto } from "../../api/ApiWrapper";
 import { statsCopy } from "../../api/ApiWrapper";
@@ -88,7 +89,6 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                 
                     await EditStrategy(copiersCount, naming, abouts, maxDepos, minDepos, id, depositAmounts,leftform, copiers);
                     await statsCopy(dispatch, setStats);
-                
             } catch (error) {
                 console.error('Error occurred:', error);
             }
@@ -102,8 +102,9 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
         useEffect(() => {
         }, [changeCrypto]);
         
-  
-        const handleItemClick = (item, amount, side) => {
+
+     
+        const handleItemClick = (item, amount, side = "short") => { // Set default value for side
             setSelectedList(prevList => {
                 if (prevList.includes(item)) {
                     const updatedList = prevList.filter(selectedItem => selectedItem !== item);
@@ -127,6 +128,7 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                         return i;
                     });
                 } else {
+                    // Use the side variable directly as it now defaults to "short" if not provided
                     return [...prevState, { name: item, total_value: amount, side: side }];
                 }
             });
@@ -158,25 +160,20 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                     return item;
                 });
         
-                // Find the USDT token
                 const usdtToken = updatedDepositAmounts.find(item => item.name === 'USDT');
         
-                // Calculate the sum of all other tokens
                 const sumOfOtherTokens = updatedDepositAmounts
                     .filter(item => item.name !== 'USDT')
                     .reduce((sum, item) => sum + parseFloat(item.total_value), 0);
         
-                // Calculate the value of USDT based on the sum of other tokens
                 const usdtValue = Math.max(100 - sumOfOtherTokens, 0);
         
-                // Update the value of the USDT token
                 const updatedUsdtToken = { ...usdtToken, total_value: usdtValue };
         
-                // Update the input class based on the sum of other tokens
                 if (sumOfOtherTokens > 100) {
-                    setInputClass('border border-red-500'); // Apply red color class
+                    setInputClass('border border-red-500'); 
                 } else {
-                    setInputClass(''); // Remove red color class
+                    setInputClass(''); 
                 }
         
                 return updatedDepositAmounts.map(item =>
@@ -233,9 +230,6 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
         };
         
         
-    const handleCloseModal = () => {
-        setChildModal(false);
-    };
     
     useEffect(() => {
         listCrypto(setCryptoList);
@@ -358,22 +352,40 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                 <div className="flex flex-col items-start bg-[#0B1217] w-1/2 rounded-lg px-3 py-1 gap-1">
                                     <label className='text-white text-sm font-bold'>Close cryptos</label>
                                     <div className="h-[200px] w-full bg-[#0B1217] rounded-lg overflow-y-auto">
-                                    {leftform.map((item, index) => (
-    <div key={index} className="flex items-center h-[60px] px-5 justify-between border-b border-white">
+                                    {leftform.filter(item => item.name !== 'USDT').map((item, index) => (
+                                        <div key={index} className="flex border-b border-white h-[100px] p-2 flex-col gap-2">
+    <div  className="flex items-center px-5 justify-between ">
         <div className="flex items-center gap-1">
-            <Image width={26} height={26} src={`/assets/icons/${(item.name).toLowerCase()}.png`} />
+            <Image width={26} height={26} src={`/assets/icons/${item.name.toLowerCase()}.png`} />
             <span className="text-white font-medium text-sm">{item.name}</span>
         </div>
-        <input
-    type="number"
-    value={item.total_value}
-    readOnly={item.name=='USDT'?true:false}
-    className={`w-[100px] px-2 text-white rounded-lg text-sm bg-[#142028] outline-none ${
-        ((parseFloat(item.total_value) > parseFloat(item.init_value))||item.total_value<=0) ? 'border border-red-500' : ''
-    }`}
-    onChange={(e) => handleInputleftChange(item.name, e.target.value)}
-/>
+        <button className={`h-4 w-4 rounded-full ${item.side=='long'?'bg-[#1DA77D]':'bg-[#E81B1B]'}`}></button>
+   
+<span className="font-bold text-white text-sm">{item.init_value}</span>
     </div>
+ <div className="flex flex-col gap-3 items-center">
+ <Slider
+  step={0.01}
+  min={0}
+  max={100}
+  value={item.total_value}
+  handleStyle={{
+    borderColor: "white",
+    height: 20,
+    width: 20,
+    backgroundColor: "white"
+  }}
+  trackStyle={{ backgroundColor: "#059bbb #0B1217", height: 15 }}
+  railStyle={{ backgroundColor: "#0B1217", height: 15 }}
+  onChange={(value) => handleInputleftChange(item.name, value)}
+/>
+<span className="text-white font-bold">
+                                     {item.total_value}
+                                        </span>  
+ </div>
+
+                                        </div>
+
 ))}
                                     </div>
                                 </div>

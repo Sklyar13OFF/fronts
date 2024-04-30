@@ -12,7 +12,9 @@ import { MyTraders } from "../../api/ApiWrapper";
 import LineChart from "./LineChart";
 import PieChart from './PieChart';
 import { PieChartData } from "../../api/ApiWrapper";
+import { GetThreshold } from "../../api/ApiWrapper";
 import { getServerSideProps as checkAuth } from '../../api/authCheck';
+import { SetThreshold } from "../../api/ApiWrapper";
 export const getServerSideProps = async (context) => {
     return checkAuth(context);
 };
@@ -22,14 +24,19 @@ export default function CopyTrading() {
     const strategies = useSelector((state) => state.strategies.value);
     const stats = useSelector((state) => state.stats.value);
     const [isAdmin, setAdm] = useState(false);
+    const [thres,setThres] = useState(0)
+
     useEffect(() => {
         fetchIsAdmin(setAdm);
         MyTraders(setMyInfo)
+        GetThreshold(setThres)
     }, []);
 
 
 
-
+    function handleClick(threshold){
+        SetThreshold(threshold)
+    }
 
 
     return (
@@ -38,7 +45,7 @@ export default function CopyTrading() {
                 < div className="flex flex-col w-full items-center h-[100vh] pt-[90px] bg-[#0B1217] justify-start" >
                     <div className=" gap-5 flex items-start justify-center">
                         <div className="flex flex-col gap-5">
-                            <div className="flex bg-[#142028] rounded-lg p-4 flex-col  w-[400px] h-[200px]">
+                            <div className="flex bg-[#142028] gap-2 rounded-lg p-4 flex-col w-[400px] h-[210px]">
                                 <div className="flex h-[30px] justify-between items-center">
                                     <span className="text-white font-bold">Traders Count</span>
                                     <span className="text-white">{stats.traders_count}</span>
@@ -52,7 +59,18 @@ export default function CopyTrading() {
                                     <span className="text-white">{stats.total_strategies_profit}</span>
                                 </div>
 
-
+                                <div className="flex h-[30px] justify-between items-center">
+                                    <span className="text-white font-bold">Trending threshold:</span>
+                                    <input
+            type="number"
+            value={thres}
+            className={`w-[100px] px-2 py-1 text-white rounded-lg text-sm  bg-[#0B1217] text-right outline-none `}
+            onChange={(e) => setThres(e.target.value)}
+        />
+                                </div>
+                                <button onClick={()=>handleClick(thres)} className="bg-[#00A2BF] text-white rounded-xl text-sm font-bold w-full ">
+                                    Save
+                                </button>
                             </div>
                             <div className="w-[400px] p-10 rounded-lg bg-[#142028]">
                                 {stats && <PieChart data={stats.get_all_cryptos_in_percentage} />}

@@ -1,4 +1,4 @@
-const BASE_URL = 'https://127.0.0.1:8000/v1/'
+const BASE_URL = 'http://127.0.0.1:8000/v1/'
 const BASE_FRONT = 'http://localhost:3000/'
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
@@ -25,6 +25,53 @@ export async function GetTxs(id,cryptos) {
         }
         const jsonData = await response.json();
         return jsonData
+
+    } catch (error) {
+    }
+}
+export async function GetThreshold(setThres) {
+  
+    try {
+        const response = await fetch(`${BASE_URL}traders/tranding-threshold/`, {
+            method: 'GET',
+            headers: {
+                'accept': '*/*',
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${getCookieValue('key')}`
+
+            },
+
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const jsonData = await response.json();
+        setThres(jsonData.min_copiers)
+    } catch (error) {
+    }
+}
+export async function SetThreshold(threshold) {
+    const logdata =
+    {
+        "min_copiers": threshold
+    }
+        try {
+        const response = await fetch(`${BASE_URL}traders/tranding-threshold/`, {
+            method: 'PATCH',
+            headers: {
+                'accept': '*/*',
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${getCookieValue('key')}`
+
+            },
+            body: JSON.stringify(logdata),
+
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
     } catch (error) {
     }
@@ -504,7 +551,6 @@ export async function AddTrader(nickname, about, photo, strategiess, deposit) {
 
 export async function EditTrader(nickname, about, id, photo, strategiess,copiers,maxcopiers,isVisible,deposit) {
     let textData
-    alert(copiers)
     if (strategiess) {
         const strategiesData = strategiess.map(item => ({
             id: item.id,

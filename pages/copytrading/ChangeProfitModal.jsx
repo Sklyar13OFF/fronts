@@ -70,9 +70,10 @@ export default function ChangeProfitModal({ custom, profit, id }) {
                                         trackStyle={{ backgroundColor: "#059bbb #0B1217", height: 15 }}
                                         railStyle={{ backgroundColor: "#0B1217", height: 15 }}
                                         onChange={OnChangeProfitEventTriggerd} />
+                                   
                                     <div className="flex justify-between items-center">
-                                        <span className="text-white font-medium">-10</span>
-                                        <span className="text-white font-medium">+10</span>
+                                        <span className="text-white font-medium">-1.5</span>
+                                        <span className="text-white font-medium">+1.5</span>
 
                                     </div>
                                 </div>
