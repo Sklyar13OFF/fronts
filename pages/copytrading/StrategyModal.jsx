@@ -37,10 +37,9 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
 
        ]
     );
-    const [leftform,setleftform] = useState(
-        crypto ? crypto.map(item => ({ ...item, init_value: item.total_value, init_side: item.side })) : []
-    );
-
+    const [leftform, setleftform] = useState(
+        crypto ? crypto.map(item => ({ ...item, total_value: 100, init_value: item.total_value, init_side: item.side })) : []
+      );
     const [abouts, setAbouts] = useState(about)
     const [copiers, setmaxCopiers] = useState(maxCopiers)
     const [combinedCryptoArray, setCombinedCryptoArray] = useState([]);
@@ -89,6 +88,7 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                 
                     await EditStrategy(copiersCount, naming, abouts, maxDepos, minDepos, id, depositAmounts,leftform, copiers);
                     await statsCopy(dispatch, setStats);
+                    window.location.reload()
             } catch (error) {
                 console.error('Error occurred:', error);
             }
@@ -371,7 +371,7 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
     </div>
  <div className="flex flex-col gap-3 items-center">
  <Slider
-  step={0.01}
+  step={1}
   min={0}
   max={100}
   value={item.total_value}
