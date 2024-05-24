@@ -516,7 +516,7 @@ export async function AddTrader(nickname, about, photo, strategiess, deposit) {
             trader_deposit: strategy.trader_deposit
         }));
         
-        const formData = transformStrategiesArrayToFormData(strategiesIdArray);
+        const formData = strategiesIdArray;
     
         formData.append('nickname', nickname);
         formData.append('about', about);
