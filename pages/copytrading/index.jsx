@@ -15,6 +15,7 @@ import { PieChartData } from "../../api/ApiWrapper";
 import { GetThreshold } from "../../api/ApiWrapper";
 import { getServerSideProps as checkAuth } from '../../api/authCheck';
 import { SetThreshold } from "../../api/ApiWrapper";
+import AddManagerModal from "./ManagerModal";
 export const getServerSideProps = async (context) => {
     return checkAuth(context);
 };
@@ -43,7 +44,7 @@ export default function CopyTrading() {
         <div>
             {isAdmin ? (
                 < div className="flex flex-col w-full items-center h-[100vh] pt-[90px] bg-[#0B1217] justify-start" >
-                    <div className=" gap-5 flex items-start justify-center">
+                    <div className=" gap-5 flex w-[850px] items-start justify-center">
                         <div className="flex flex-col gap-5">
                             <div className="flex bg-[#142028] gap-2 rounded-lg p-4 flex-col w-[400px] h-[210px]">
                                 <div className="flex h-[30px] justify-between items-center">
@@ -86,7 +87,7 @@ export default function CopyTrading() {
                                 <AddTraderModal />
                                 <div className="bg-[#142028] overflow-y-auto w-full h-full rounded-b-xl shadow-lg flex flex-col">
                                     {traders && traders.map((trader) => (
-                                        <TraderModal visible={trader.visible} key={trader.id} maxcopiers={trader.max_copiers} copierscount={trader.copiers_count} id={trader.id} nickname={trader.nickname} about={trader.about} register={trader.date_of_registration} photo={trader.photo} strategies={trader.strategies} deposits={trader.deposit}/>
+                                        <TraderModal auto={trader.auto_trading} visible={trader.visible} key={trader.id} maxcopiers={trader.max_copiers} copierscount={trader.copiers_count} id={trader.id} nickname={trader.nickname} about={trader.about} register={trader.date_of_registration} photo={trader.photo} strategies={trader.strategies} deposits={trader.deposit}/>
                                     ))}
                                 </div>
                             </div>
@@ -98,8 +99,12 @@ export default function CopyTrading() {
                                     ))}
                                 </div>
                             </div>
-
+         
                         </div>
+                        <div className="flex flex-col  !w-[300px] h-[360px]">
+                                <AddManagerModal />
+                            
+                            </div>
                     </div>
                 </div >
             ) : (< div className="flex flex-col w-full items-center h-[100vh] pt-[90px] bg-[#0B1217] justify-start" >

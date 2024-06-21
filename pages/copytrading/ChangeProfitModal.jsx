@@ -10,9 +10,11 @@ export default function ChangeProfitModal({ custom, profit, id }) {
     const dispatch = useDispatch()
     const [isOpen, setIsOpen] = useState(false);
     const [profitChange, setProfitChange] = useState(0)
-    const OnChangeProfitEventTriggerd = (newValue) => {
-        setProfitChange(newValue);
+    const OnChangeProfitEventTriggered = (event) => {
+        const value = event.target.value;
+        setProfitChange(value);
     };
+    
     const handleEditClick = async (profitChange, id) => {
         try {
             await ChangeProfitPerc(profitChange, id)
@@ -60,16 +62,9 @@ export default function ChangeProfitModal({ custom, profit, id }) {
                                     <span className={`${profitChange < 0 ? 'text-red-500' : 'text-green-500'} font-bold text-xl `}>{profitChange} %</span>
                                 </div>
                                 <div className="flex flex-col gap-3">
-                                    <Slider step={0.01} min={-1.5} max={1.5} value={profitChange} handleStyle={{
-                                        borderColor: "white",
-                                        height: 20,
-                                        width: 20,
-
-                                        backgroundColor: "white"
-                                    }}
-                                        trackStyle={{ backgroundColor: "#059bbb #0B1217", height: 15 }}
-                                        railStyle={{ backgroundColor: "#0B1217", height: 15 }}
-                                        onChange={OnChangeProfitEventTriggerd} />
+                                    <input type="number" className="bg-[#0B1217] text-white text-sm font-medium rounded-lg outline-none px-2 h-10" step={0.01} min={-1.5} max={1.5} value={profitChange} 
+                       
+                                        onChange={OnChangeProfitEventTriggered} />
                                    
                                     <div className="flex justify-between items-center">
                                         <span className="text-white font-medium">-1.5</span>

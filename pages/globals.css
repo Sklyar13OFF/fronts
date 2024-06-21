@@ -110,6 +110,7 @@
     background-color: #142028;
 
 }
+
 .check {
     position: relative;
     background: linear-gradient(90deg, #01A1BE, #142028);
@@ -310,6 +311,108 @@ input[type=checkbox]::before {
     transition: .3s ease;
 }
 
+.check1 {
+    position: relative;
+    background: linear-gradient(90deg, #01A1BE, #142028);
+    line-height: 0;
+    font-size: 25px;
+   }
+   
+   .check1 input[type="checkbox"],
+   .check1 label,
+   .check1 label::before,
+   .check1 label::after {
+    appearance: none;
+    display: inline-block;
+    font-size: inherit;
+    border-radius: 1em;
+    border: 0;
+    transition: .35s ease-in-out;
+    box-sizing: border-box;
+    cursor: pointer;
+   }
+   
+   .check1 {
+    appearance: none;
+    display: inline-block;
+    border-radius: 1em;
+    border: 0;
+    width:55px;
+    transition: .35s ease-in-out;
+    box-sizing: border-box;
+    cursor: pointer;
+   }
+   
+   .check1 label {
+    width: 2.2em;
+    height: 1em;
+    background: #d7d7d7;
+    overflow: hidden;
+   }
+   
+   .check1 input[type="checkbox"] {
+    position: absolute;
+    z-index: 1;
+    width: .8em;
+    height: .8em;
+    top: .1em;
+    left: .1em;
+    background: linear-gradient(45deg, #dedede, #ffffff);
+    box-shadow: 0 6px 7px rgba(0,0,0,0.3);
+    outline: none;
+   }
+   
+   .check1 input[type="checkbox"]:checked {
+    left: 1.3em;
+   }
+   
+   .check1 input[type="checkbox"]:checked + label {
+    background: transparent;
+   }
+   
+   .check1 label::before,
+   .check1 label::after {
+    content: "· ·";
+    position: absolute;
+    overflow: hidden;
+    left: .50em;
+    top: .5em;
+    height: 1em;
+    letter-spacing: -.04em;
+    color: #9b9b9b;
+    font-family: "Times New Roman", serif;
+    z-index: 2;
+    font-size: .6em;
+    border-radius: 0;
+    transform-origin: 0 0 -.5em;
+    backface-visibility: hidden;
+   }
+   
+   .check1 label::after {
+    content: "?";
+    top: .65em;
+    left: .6em;
+    height: .1em;
+    width: .35em;
+    font-size: .2em;
+    transform-origin: 0 0 -.4em;
+   }
+   
+   .check1 input[type="checkbox"]:checked + label::before,
+   .check1 input[type="checkbox"]:checked + label::after {
+    left: 2.55em;
+    top: .4em;
+    line-height: .1em;
+    transform: rotateY(360deg);
+   }
+   
+   .check1 input[type="checkbox"]:checked + label::after {
+    height: .16em;
+    top: .55em;
+    left: 2.6em;
+    font-size: .6em;
+    line-height: 0;
+   }
 input[type=checkbox]:checked::before {
     background-color: var(--true);
     left: calc(100% - (1.9em/2 + .3em));
@@ -395,7 +498,7 @@ input[type=checkbox]:checked::before {
     width: 800px;
     position: relative;
     box-shadow: 0 4px 20px 0 rgb(0 0 0 / 10%), 0 1px 2px 0 rgb(0 0 0 / 6%);
-    height: 720px;
+    height: 820px;
     background-color: #142028;
 
 }
@@ -457,7 +560,33 @@ body {
     background-color: #142028;
 
 }
+.addmanager-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.3s ease;
+}
 
+.addmanager-modal-content {
+    border-radius: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    z-index: 999;
+    transform: translateY(100%);
+    animation: slide-up 0.2s ease-out forwards;
+    width: 500px;
+    position: relative;
+    box-shadow: 0 4px 20px 0 rgb(0 0 0 / 10%), 0 1px 2px 0 rgb(0 0 0 / 6%);
+    height: 400px;
+    background-color: #142028;
+
+}
 .addstrat-modal-overlay {
     position: fixed;
     top: 0;

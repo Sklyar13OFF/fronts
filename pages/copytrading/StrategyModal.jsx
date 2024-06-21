@@ -183,7 +183,6 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
         };
         
     
-        
         const handleInputleftChange = (itemName, amount) => {
             setleftform(prevState => {
                 const updatedleftForm = prevState.map(item => {
@@ -192,7 +191,7 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                     }
                     return item;
                 });
-                console.log(leftform)
+                console.log(updatedleftForm);
                 return updatedleftForm;
             });
         };
@@ -370,24 +369,16 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
 <span className="font-bold text-white text-sm">{item.init_value}%</span>
     </div>
  <div className="flex flex-col gap-3 items-center">
- <Slider
-  step={1}
+ <input
+  type="number"
+  className="w-[100px] bg-[#0B1217] rounded-lg text-center outline-none text-white font-medium text-sm "
+  step={0.001}
   min={0}
   max={100}
   value={item.total_value}
-  handleStyle={{
-    borderColor: "white",
-    height: 20,
-    width: 20,
-    backgroundColor: "white"
-  }}
-  trackStyle={{ backgroundColor: "#059bbb #0B1217", height: 15 }}
-  railStyle={{ backgroundColor: "#0B1217", height: 15 }}
-  onChange={(value) => handleInputleftChange(item.name, value)}
+  onChange={(e) => handleInputleftChange(item.name, parseFloat(e.target.value))}
 />
-<span className="text-white font-bold">
-                                     {item.total_value}%
-                                        </span>  
+
  </div>
 
                                         </div>

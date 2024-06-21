@@ -7,7 +7,7 @@ import { ListAvailableStrategies } from "../../api/ApiWrapper";
 import { statsCopy } from "../../api/ApiWrapper";
 import { setStats } from "../../src/features/mainStats/statsSlice";
 import Image from 'next/image';
-export default function TraderModal({ visible,nickname, about, register, id, strategies, photo,  copierscount,maxcopiers,deposits }) {
+export default function TraderModal({ visible,nickname, about, register, id, strategies, photo,  copierscount,maxcopiers,deposits,auto }) {
     const dispatch = useDispatch();
     const [isOpen, setIsOpen] = useState(false);
     const [isDelOpen, setIsDelOpen] = useState(false);
@@ -51,9 +51,9 @@ export default function TraderModal({ visible,nickname, about, register, id, str
     });
 };
 
-    const handleSubmit = async (username, abouts, id, file, strategiess,maxcopiers,isVisible,deposit) => {
+    const handleSubmit = async (username, abouts, id, file, strategiess,maxcopiers,isVisible,deposit,isAuto) => {
         try {
-            await EditTrader(username, abouts, id, file, strategiess,maxcopiers,isVisible,deposit);
+            await EditTrader(username, abouts, id, file, strategiess,maxcopiers,isVisible,deposit,isAuto);
             setIsOpen(false);
             await listAllTraders(dispatch, setTraders);
             await statsCopy(dispatch, setStats);
@@ -90,6 +90,8 @@ export default function TraderModal({ visible,nickname, about, register, id, str
     const [username, setUsername] = useState(nickname);
     const [abouts, setAbouts] = useState(about)
     const [isVisible,setVisibility] = useState(visible)
+    const [isAuto,setAuto] = useState(auto)
+
     return (
         <div>
             <div onClick={() => setIsOpen(true)} key={id} className="text-white cursor-pointer divi flex flex-col p-5">
@@ -167,8 +169,21 @@ export default function TraderModal({ visible,nickname, about, register, id, str
 />
   <label for="check"></label>
 </div>
+
                                     </div>
-                                    
+
+<div className="flex gap-3 items-center">
+<span className="text-white font-bold">Auto-Trading</span>
+<div class="check1">
+                                    <input 
+  id="check1" 
+  type="checkbox" 
+  checked={isAuto} 
+  onChange={() => setAuto(!isAuto)}
+/>
+  <label for="check1"></label>
+</div>
+</div>
                                     <div className="flex rounded-2xl w-[160px] items-center bg-[#0B1217]">
                                     
                                             <div className='flex gap-1 items-start flex-col'>
@@ -239,7 +254,7 @@ export default function TraderModal({ visible,nickname, about, register, id, str
                             </div>
                             <div className='flex w-full justify-between mt-4'>
                                 <button onClick={() => setIsOpen(false)} className='text-white font-bold'>Close</button>
-                                <button onClick={() => handleSubmit(username, abouts, id, file, strategiess,maxCopiers,isVisible,deposit)} className='w-[600px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Edit</button>
+                                <button onClick={() => handleSubmit(username, abouts, id, file, strategiess,maxCopiers,isVisible,deposit,isAuto)} className='w-[600px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Edit</button>
                             </div>
                         </div>
                     </div>

@@ -1,4 +1,4 @@
-const BASE_URL = 'http://127.0.0.1:8000/v1/'
+const BASE_URL = 'http://127.0.0.1:5050/v1/'
 const BASE_FRONT = 'http://localhost:3000/'
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
@@ -476,6 +476,38 @@ export async function CheckPing(key) {
     return false;
 }
 
+export async function AddManager(name, email, photo) {
+
+
+    
+        const formData = strategiesIdArray;
+    
+        formData.append('name', name);
+        formData.append('email', email);
+        formData.append('photo', photo);
+        
+        
+        try {
+            const response = await fetch(`https://finrex.com/v1/user/create_manager/`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Token ${getCookieValue('key')}`
+                },
+                body: formData,
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Trader added successfully:', data);
+            } else {
+                console.error('Failed to add trader');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    
+}
+
 export async function AddTrader(nickname, about, photo, strategiess, deposit) {
     const strategiesIdArray = strategiess.map(strategy => ({
         id: strategy.id,
@@ -549,7 +581,7 @@ export async function AddTrader(nickname, about, photo, strategiess, deposit) {
 
 
 
-export async function EditTrader(nickname, about, id, photo, strategiess,maxcopiers,isVisible,deposit) {
+export async function EditTrader(nickname, about, id, photo, strategiess,maxcopiers,isVisible,deposit,auto) {
     let textData
     if (strategiess) {
         const strategiesData = strategiess.map(item => ({
@@ -562,7 +594,8 @@ export async function EditTrader(nickname, about, id, photo, strategiess,maxcopi
             about: about,
             strategies_id: strategiesData,
             max_copiers:maxcopiers,
-            visible:isVisible
+            visible:isVisible,
+            auto_trading:auto
         };
     } else {
         textData = {
@@ -571,7 +604,9 @@ export async function EditTrader(nickname, about, id, photo, strategiess,maxcopi
             about: about,
             max_copiers:maxcopiers,
             visible:isVisible,
-            strategies_id:[]
+            strategies_id:[],
+            auto_trading:auto
+
 
         };
     }
