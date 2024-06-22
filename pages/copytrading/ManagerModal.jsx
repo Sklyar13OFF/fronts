@@ -1,8 +1,24 @@
 import { useState } from "react";
 import '../globals.css';
+import { AddManager } from "../../api/ApiWrapper";
 
 export default function AddManagerModal({}) {
     const [isOpen, setIsOpen] = useState(false);
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [photo, setPhoto] = useState(null);
+
+    const handleAddManager = async () => {
+        await AddManager(name, email, photo);
+        setIsOpen(false);
+    };
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setPhoto(file);
+        }
+    };
 
     return (
         <div>
@@ -26,6 +42,8 @@ export default function AddManagerModal({}) {
                                 <span className="font-medium text-white text-sm">Name</span>
                                 <input
                                     type="text"
+                                    value={name}
+                                    onChange={(event) => setName(event.target.value)}
                                     className="w-[90%] h-10 outline-none bg-[#0B1217] px-2 text-white font-medium rounded-lg"
                                 />
                             </div>
@@ -33,6 +51,8 @@ export default function AddManagerModal({}) {
                                 <span className="font-medium text-white text-sm">E-Mail</span>
                                 <input
                                     type="text"
+                                    value={email}
+                                    onChange={(event) => setEmail(event.target.value)}
                                     className="w-[90%] h-10 outline-none bg-[#0B1217] px-2 text-white font-medium rounded-lg"
                                 />
                             </div>
@@ -78,11 +98,11 @@ export default function AddManagerModal({}) {
                                     id="file-input"
                                     type="file"
                                     className="hidden"
-                                    onChange={(e) => console.log(e.target.files[0])} // handle file selection here
+                                    onChange={handleFileChange}
                                 />
                             </div>
                             <button
-                                onClick={() => setIsOpen(false)}
+                                onClick={handleAddManager}
                                 className='w-[90%] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'
                             >
                                 ADD

@@ -477,35 +477,28 @@ export async function CheckPing(key) {
 }
 
 export async function AddManager(name, email, photo) {
+    const formData = new FormData(); // Correct way to initialize FormData
 
+    formData.append('name', name);
+    formData.append('email', email);
+    formData.append('avatar', photo);
 
-    
-        const formData = strategiesIdArray;
-    
-        formData.append('name', name);
-        formData.append('email', email);
-        formData.append('photo', photo);
-        
-        
-        try {
-            const response = await fetch(`https://finrex.com/v1/user/create_manager/`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Token ${getCookieValue('key')}`
-                },
-                body: formData,
-            });
-    
-            if (response.ok) {
-                const data = await response.json();
-                console.log('Trader added successfully:', data);
-            } else {
-                console.error('Failed to add trader');
-            }
-        } catch (error) {
-            console.error('Error:', error);
+    try {
+        const response = await fetch(`https://finrex.com/v1/user/create_manager/`, {
+            method: 'POST',
+   
+            body: formData,
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Manager added successfully:', data);
+        } else {
+            console.error('Failed to add manager');
         }
-    
+    } catch (error) {
+        console.error('Error:', error);
+    }
 }
 
 export async function AddTrader(nickname, about, photo, strategiess, deposit) {
