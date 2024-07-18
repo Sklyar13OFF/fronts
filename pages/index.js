@@ -17,7 +17,7 @@ export default function LoginPage() {
 
     return (
         <div className="bg-[#0B1217] flex flex-col items-center justify-center h-[100vh] w-full">
-            <div className='bg-[#142028] p-5 w-[500px] h-[400px] flex flex-col gap-10 items-center justify-center rounded-xl shadow-lg'>
+            <div className='bg-[#142028] p-5 w-[360px] md:w-[500px] md:h-[400px] flex flex-col gap-10 items-center justify-center rounded-xl shadow-lg'>
                 <h5 className='text-white text-4xl font-bold'>Authorization</h5>
                 <div className='flex gap-1 items-start flex-col'>
                     <label className='text-white text-sm' required>Username</label>

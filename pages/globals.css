@@ -607,10 +607,10 @@ body {
     z-index: 999;
     transform: translateY(100%);
     animation: slide-up 0.2s ease-out forwards;
-    width: 760px;
+    width: 360px;
     position: relative;
     box-shadow: 0 4px 20px 0 rgb(0 0 0 / 10%), 0 1px 2px 0 rgb(0 0 0 / 6%);
-    height: 902px;
+    height: 550px;
     background-color: #142028;
 
 }

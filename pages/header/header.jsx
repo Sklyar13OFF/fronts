@@ -45,26 +45,21 @@ export default function Header() {
         <div style={{ zIndex: '1000' }} className='header  bg-[#142028] h-[60px] flex items-center justify-between px-10 shadow-lg '>
             <span className="text-white font-bold text-2xl">ADMINKA</span>
             <div className="flex items-center h-[70px] ">
+       
                 {ping &&
-                    (!isAdmin &&
-                        <button className="w-[200px] rounded-lg bg-[#5396a2] text-white h-[40px] font-medium " >USDT {myInfo.wallet}</button>
-
-                    )
-                }
-                {ping &&
-                    <Link href='/copytrading' className={`${urlyk === 'copy' ? 'font-bold bg-[#5396a2]' : 'font-medium'} rounded-xl text-white link w-[150px] `} >
+                    <Link href='/copytrading' className={`${urlyk === 'copy' ? 'font-bold bg-[#5396a2]' : 'font-medium'} rounded-xl text-white link `} >
                         COPY TRADING
                         </Link>
 
                 }
                 {ping &&
 
-                    <Link href='/users' className={`${urlyk === 'users' ? 'font-bold bg-[#5396a2]' : 'font-medium'} rounded-xl text-white link w-[120px] `} >USERS</Link>
+                    <Link href='/users' className={`${urlyk === 'users' ? 'font-bold bg-[#5396a2]' : 'font-medium'} rounded-xl text-white link  `} >USERS</Link>
                 }
 
                 {ping &&
 
-                    <button className="w-[100px] rounded-lg bg-[#00A2BF] text-white h-[40px] ml-5" onClick={signOut}>Log out</button>
+                    <button className=" rounded-lg bg-[#00A2BF] text-white h-[40px] ml-5" onClick={signOut}>Log out</button>
                 }
             </div>
         </div>

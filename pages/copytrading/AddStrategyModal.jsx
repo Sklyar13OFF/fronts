@@ -64,70 +64,73 @@ export default function AddStrategyModal() {
             {isOpen && (
                 <div className={`addstrat-modal-overlay`}>
                     <div className={`addstrat-modal-content`}>
-                        <div className="flex flex-col w-full items-start gap-8 p-6">
-                            <span className='text-2xl text-white font-bold'>Add new strategy</span>
+                        <div className="flex flex-col w-full items-start gap-5 p-6">
+                            <span className=' text-white font-bold'>Add new strategy</span>
                             <div className='flex flex-col gap-4'>
-                                <div className="flex gap-4">
+                                <div className="flex gap-3">
                                     <div className="flex flex-col gap-4">
                                         <div className='flex gap-1 items-start flex-col'>
-                                            <label className='text-white text-sm' >Name</label>
-                                            <input onChange={(event) => setName(event.target.value)} className='bg-[#0B1217] px-3 text-white text-sm rounded-lg shadow-lg outline-none w-[350px] h-[40px]' required />
+                                            <input onChange={(event) => setName(event.target.value)} placeholder='Name' className='bg-[#0B1217] px-3 text-white text-sm rounded-lg shadow-lg outline-none w-[150px] h-[40px]' required />
                                         </div>
-                                        <div className='flex gap-1 items-start flex-col'>
-                                            <label className='text-white text-sm' >Minimum deposit amount</label>
-                                            <input type='number' onChange={(event) => setminDepo(event.target.value)} className='bg-[#0B1217] px-3 text-white text-sm rounded-lg shadow-lg outline-none w-[350px] h-[40px]' required />
+                                        <div className="flex items-center gap-1 bg-[#0B1217] p-[1px] rounded-lg">
+                                        <input type='number' onChange={(event) => setminDepo(event.target.value)} placeholder='0' className='bg-[#0B1217] px-3 text-white text-sm rounded-lg shadow-lg outline-none w-[50px] h-[40px]' required />
+                                        <span className="text-[#9CA3AF] font-medium">/</span>
+                                        <input type='number' onChange={(event) => setmaxDepo(event.target.value)} placeholder='100' className='bg-[#0B1217] px-3 text-white text-sm rounded-lg shadow-lg outline-none w-[70px] h-[40px]' required />
+                                        <span className="text-[#9CA3AF] font-medium">$</span>
                                         </div>
-                                        <div className='flex gap-1 items-start flex-col'>
-                                            <label className='text-white text-sm' >Maximum deposit amount</label>
-                                            <input type='number' onChange={(event) => setmaxDepo(event.target.value)} className='bg-[#0B1217] px-3 text-white text-sm rounded-lg shadow-lg outline-none w-[350px] h-[40px]' required />
-                                        </div>
+                     
                 
                                         <div className='flex gap-1 items-start flex-col'>
-                                            <label className='text-white text-sm'>About</label>
-                                            <textarea style={{ resize: 'none' }} onChange={(event) => setAbout(event.target.value)} className='bg-[#0B1217] py-2 px-3 text-white text-sm rounded-lg shadow-lg outline-none w-[350px] h-[80px]' type='password' required ></textarea>
+                                            <textarea style={{ resize: 'none' }} onChange={(event) => setAbout(event.target.value)} className='bg-[#0B1217] py-2 px-3 text-white text-sm rounded-lg shadow-lg outline-none w-[150px] h-[80px]' placeholder = 'About' type='password' required ></textarea>
                                         </div>
-                                        <div className="flex flex-col gap-1 items-start">
+                                        <div className="flex flex-col  items-start">
                                             <input
                                                 type="text"
                                                 value={searchText}
                                                 onChange={(e) => setSearchText(e.target.value)}
                                                 placeholder="Search"
-                                                className="my-4 px-2 w-[350px]  rounded-lg text-white h-10 outline-none bg-[#0B1217]"
+                                                className=" px-2 w-[150px]  rounded-t-lg text-white h-10 outline-none bg-[#0B1217]"
                                             />
-                                            <div className="h-[200px] w-[350px] bg-[#0B1217] rounded-lg overflow-y-auto">
+                                            <div className="h-[180px] w-[150px] bg-[#0B1217] rounded-b-lg overflow-y-auto">
                                                 {filteredCryptoList.map((item, index) => (
-                                                    <div key={index} onClick={() => handleItemClick(item)} className={`flex ${selectedList.includes(item) ? 'bg-[#243a49]' : ''} items-center h-[60px] px-5 gap-1 border-b border-white`}>
-                                                        <Image width={26} height={26} src={`/assets/icons/${item.toLowerCase()}.png`} />
-                                                        <span className="text-white font-medium text-sm">{item}</span>
+                                                    <div key={index} onClick={() => handleItemClick(item)} className={`flex ${selectedList.includes(item) ? 'bg-[#243a49]' : ''} items-center h-[40px] px-5 gap-1 border-b border-[#5b5f66]`}>
+                                                        <Image width={16} height={16} src={`/assets/icons/${item.toLowerCase()}.png`} />
+                                                        <span className="text-white font-medium text-xs">{item}</span>
                                                     </div>
                                                 ))}
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="flex flex-col gap-1">
-                                        <div className="flex flex-col items-start gap-1">
-                                            <label className='text-white text-sm'>Selected cryptos</label>
-                                            <div className="h-[500px] w-[300px] bg-[#0B1217] rounded-lg overflow-y-auto">
+                                    <div className="flex flex-col">
+                                        <div className="flex flex-col w-[160px]  items-start ">
+                                            <label className='text-[#9CA3AF] bg-[#0B1217] w-[160px]  rounded-t-lg p-1 font-medium text-sm'>Selected cryptos</label>
+                                            <div className="h-[400px] w-[160px] bg-[#0B1217] rounded-b-lg overflow-y-auto">
                                                 {selectedList.map((item, index) => (
-                                                    <div key={index} className="flex items-center h-[60px] px-5 justify-between border-b border-white">
-                                                        <div className="flex gap-1">
-                                                            <Image width={26} height={26} src={`/assets/icons/${item.toLowerCase()}.png`} />
-                                                            <span className="text-white font-medium text-sm">{item}</span>
+                                                    <div key={index} className="flex items-center h-[50px] px-5 justify-between border-b border-[#5b5f66]">
+                                                        <div className="flex items-center gap-1">
+                                                            <Image width={16} height={16} src={`/assets/icons/${item.toLowerCase()}.png`} />
+                                                            <span className="text-white font-bold text-xs">{item}</span>
                                                         </div>
+                                                        <div className="flex items-center px-[1px] rounded-lg bg-[#142028]">
                                                         <input
                                                             type="number"
-                                                            className="w-[100px] px-2 text-white rounded-lg text-sm bg-[#142028] outline-none"
+                                                            className="w-[40px] px-2 text-[#9CA3AF] rounded-lg bg-[#142028] font-medium text-sm  outline-none"
                                                             onChange={(e) => handleDepositChange(item, e.target.value)}
                                                         />
+                                                        <span className="text-[#9CA3AF] text-sm font-medium ">
+                                                            %
+                                                        </span>
+                                                        </div>
+                                 
                                                     </div>
                                                 ))}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div className='flex w-full justify-between mt-4'>
-                                    <button onClick={() => setIsOpen(false)} className='text-white font-bold'>Close</button>
-                                    <button onClick={() =>  handleAddClick(name, about, maxDepo, minDepo, depositAmounts)} className='w-[470px] gradient-button h-[40px] font-bold bg-[#00A2BF] rounded-lg text-white'>Add</button>
+                                <div className='flex w-full justify-between'>
+                                    <button onClick={() => setIsOpen(false)} className='text-white text-sm font-bold'>Close</button>
+                                    <button onClick={() =>  handleAddClick(name, about, maxDepo, minDepo, depositAmounts)} className='w-[160px] gradient-button h-[30px]  font-bold bg-[#00A2BF] rounded-lg text-white'>Add</button>
                                 </div>
                             </div>
                         </div>

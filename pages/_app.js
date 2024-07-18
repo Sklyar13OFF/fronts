@@ -81,7 +81,7 @@ export default function MyApp({ Component, pageProps }) {
     return (
     <Provider store={store}>
 
-        <div className=''>
+        <div className='bg-[#0B1217]'>
             <Header />
             <TradersUpdater/>
             <StrategiesUpdater/>

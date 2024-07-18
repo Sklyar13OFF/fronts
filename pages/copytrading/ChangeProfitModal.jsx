@@ -65,12 +65,7 @@ export default function ChangeProfitModal({ custom, profit, id }) {
                                     <input type="number" className="bg-[#0B1217] text-white text-sm font-medium rounded-lg outline-none px-2 h-10" step={0.01} min={-1.5} max={1.5} value={profitChange} 
                        
                                         onChange={OnChangeProfitEventTriggered} />
-                                   
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-white font-medium">-1.5</span>
-                                        <span className="text-white font-medium">+1.5</span>
-
-                                    </div>
+                 
                                 </div>
 
                             </div>
