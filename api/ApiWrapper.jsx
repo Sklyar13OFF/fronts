@@ -250,7 +250,22 @@ export async function UsersList(
     console.error("Error fetching user list:", error);
   }
 }
-
+export async function GetUserWallet(finrexID, setWallet) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}auth/get_user_balance/?internal_id=${finrexID}`,
+      {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          Authorization: `Token ${getCookieValue("key")}`,
+        },
+      }
+    );
+    const jsonData = await response.json();
+    setWallet(jsonData);
+  } catch (error) {}
+}
 export async function BlockDeleteUsers(option, list) {
   let data;
   data = {

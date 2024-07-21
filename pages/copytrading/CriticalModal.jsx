@@ -17,7 +17,11 @@ export default function CriticalModal({ option, list, open, opened }) {
         <div className="flex flex-col gap-6 items-center justify-center">
           <h5 className="text-center text-root-white font-bold text-2xl">
             Are you sure, you want to{" "}
-            <span className="text-root-red">{option}</span>{" "}
+            {option == "UNBLOCK" ? (
+              <span className="text-root-green">{option}</span>
+            ) : (
+              <span className="text-root-red">{option}</span>
+            )}{" "}
             {list.length > 1 ? "these" : "this"} {list.length}{" "}
             {list.length > 1 ? "users" : "user"}
           </h5>

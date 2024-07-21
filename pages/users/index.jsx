@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import WalletModal from "@/copytrading/WalletModal";
 import {
   UsersInfo,
   UsersTotalInfo,
   UserStats,
   UsersList,
+  GetUserWallet,
 } from "../../api/ApiWrapper";
 import { Tooltip } from "react-tooltip";
 import CriticalModal from "@/copytrading/CriticalModal";
@@ -21,12 +23,13 @@ export default function Users() {
   const [searchText, setSearchText] = useState("");
   const [userStats, setStats] = useState({});
   const [list, setList] = useState([]);
+  const [walletList, setWalletList] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [option, setOption] = useState("BLOCK");
   const [searchParam, setSearchParam] = useState("nickname");
-
+  const [openedWallet, openWallet] = useState(false);
   const [openedCritical, openCritical] = useState(false);
 
   function handleSearch() {
@@ -70,6 +73,10 @@ export default function Users() {
     });
   };
 
+  async function eyeClick(finrexID) {
+    openWallet(true);
+    await GetUserWallet(finrexID, setWalletList);
+  }
   useEffect(() => {
     UsersInfo(setInfo);
     UsersTotalInfo(setTotalInfo);
@@ -116,7 +123,30 @@ export default function Users() {
                   onClick={() => openCritical(true)}
                   className="w-[121px] h-10 bg-root-red rounded-xl text-prim font-bold"
                 >
-                  {option}
+                  Block
+                </button>
+                <Image
+                  onClick={() => setOption("UNBLOCK")}
+                  className="cursor-pointer"
+                  src="/assets/icons/chevron-right.svg"
+                  width={24}
+                  height={24}
+                />
+              </div>
+            ) : option === "UNBLOCK" ? (
+              <div className="flex items-center gap-1">
+                <Image
+                  onClick={() => setOption("BLOCK")}
+                  className="cursor-pointer"
+                  src="/assets/icons/chevron-left.svg"
+                  width={24}
+                  height={24}
+                />
+                <button
+                  onClick={() => openCritical(true)}
+                  className="w-[121px] h-10 bg-root-green rounded-xl text-prim font-bold"
+                >
+                  Unblock
                 </button>
                 <Image
                   onClick={() => setOption("DELETE")}
@@ -129,7 +159,7 @@ export default function Users() {
             ) : (
               <div className="flex items-center gap-1">
                 <Image
-                  onClick={() => setOption("BLOCK")}
+                  onClick={() => setOption("UNBLOCK")}
                   className="cursor-pointer"
                   src="/assets/icons/chevron-left.svg"
                   width={24}
@@ -139,7 +169,7 @@ export default function Users() {
                   onClick={() => openCritical(true)}
                   className="w-[121px] h-10 bg-root-red rounded-xl text-prim font-bold"
                 >
-                  {option}
+                  Delete
                 </button>
               </div>
             )
@@ -152,6 +182,7 @@ export default function Users() {
             </button>
           )}
         </div>
+
         <div className="flex flex-col gap-4 justify-center mt-5">
           <div className="h-[350px]">
             <table className="table-fixed ">
@@ -169,6 +200,7 @@ export default function Users() {
                   </th>
                   <th className="text-gr font-normal text-left">Active</th>
                   <th className="text-gr font-normal text-left">Balance</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -213,8 +245,19 @@ export default function Users() {
                           <div className="w-5 h-5 rounded-full bg-root-red" />
                         )}
                       </td>
-                      <td className="text-root-green font-semibold">
+                      <td className="text-root-green font-semibold pr-5">
                         {parseFloat(item.total_money).toFixed(2)}
+                      </td>
+                      <td>
+                        <button onClick={() => eyeClick(item.internal_id)}>
+                          {" "}
+                          <Image
+                            className="cursor-pointer icon"
+                            src="/assets/icons/eye.svg"
+                            width={24}
+                            height={24}
+                          />
+                        </button>
                       </td>
                       <Tooltip id={`email_${index}`} />
                       <Tooltip id={`nick_${index}`} />
@@ -340,6 +383,7 @@ export default function Users() {
         opened={openedCritical}
         open={openCritical}
       />
+      <WalletModal list={walletList} opened={openedWallet} open={openWallet} />
     </div>
   );
 }
