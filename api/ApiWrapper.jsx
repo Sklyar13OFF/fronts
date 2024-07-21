@@ -1,5 +1,5 @@
-const BASE_URL = "http://127.0.0.1:5050/v1/";
-const BASE_FRONT = "http://localhost:3000/";
+const BASE_URL = "https://finca.finrex.com/v1/";
+const BASE_FRONT = "http://localhost:3001";
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
 export async function GetTxs(id, cryptos) {
@@ -216,6 +216,40 @@ export async function MyTraders(setMyInfo) {
   } catch (error) {
     console.error("Fetching data failed", error);
   }
+}
+export async function UsersList(setUsers, page, setTotalPages) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}auth/get_users_list/?page=${page}`,
+      {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          Authorization: `Token ${getCookieValue("key")}`,
+        },
+      }
+    );
+    const jsonData = await response.json();
+    setUsers(jsonData.results);
+    setTotalPages(jsonData.total_pages);
+  } catch (error) {}
+}
+export async function BlockDeleteUsers(option, list) {
+  let data;
+  data = {
+    option: option,
+    user_list: list,
+  };
+  try {
+    const response = await fetch(`${BASE_URL}auth/block_or_delete_users/`, {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+  } catch (error) {}
 }
 export async function UserStats(setStats) {
   try {
