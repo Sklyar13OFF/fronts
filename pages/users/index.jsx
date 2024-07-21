@@ -247,23 +247,41 @@ export default function Users() {
               </button>
             </div>
             <div className="px-3 py-1 bg-white bg-opacity-10 rounded-xl inline-flex justify-center items-center gap-2">
-              <Image
-                src="/assets/icons/chevron-left.svg"
-                className="cursor-pointer"
-                width={24}
-                height={24}
-                onClick={() => scrollPage(false)}
-              />
+              {page == 1 ? (
+                <Image
+                  src="/assets/icons/chevron-l-block.svg"
+                  width={24}
+                  className="cursor-pointer"
+                  height={24}
+                />
+              ) : (
+                <Image
+                  src="/assets/icons/chevron-left.svg"
+                  width={24}
+                  className="cursor-pointer"
+                  height={24}
+                  onClick={() => scrollPage(false)}
+                />
+              )}
               <span className="text-root-white">
                 {page} / {totalPages}
               </span>
-              <Image
-                src="/assets/icons/chevron-right.svg"
-                width={24}
-                className="cursor-pointer"
-                height={24}
-                onClick={() => scrollPage(true)}
-              />
+              {page == totalPages ? (
+                <Image
+                  src="/assets/icons/chevron-r-block.svg"
+                  width={24}
+                  className="cursor-pointer"
+                  height={24}
+                />
+              ) : (
+                <Image
+                  src="/assets/icons/chevron-right.svg"
+                  width={24}
+                  className="cursor-pointer"
+                  height={24}
+                  onClick={() => scrollPage(true)}
+                />
+              )}
             </div>
           </div>
         </div>
