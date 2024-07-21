@@ -217,23 +217,40 @@ export async function MyTraders(setMyInfo) {
     console.error("Fetching data failed", error);
   }
 }
-export async function UsersList(setUsers, page, setTotalPages) {
+export async function UsersList(
+  setUsers,
+  page,
+  setTotalPages,
+  search_type,
+  search_query,
+  setPage
+) {
+  let url;
+  if (search_query) {
+    url = `${BASE_URL}auth/get_users_list/?page=${page}&search_type=${search_type}&search=${search_query}`;
+  } else {
+    url = `${BASE_URL}auth/get_users_list/?page=${page}`;
+  }
   try {
-    const response = await fetch(
-      `${BASE_URL}auth/get_users_list/?page=${page}`,
-      {
-        method: "GET",
-        headers: {
-          accept: "application/json",
-          Authorization: `Token ${getCookieValue("key")}`,
-        },
-      }
-    );
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        Authorization: `Token ${getCookieValue("key")}`,
+      },
+    });
     const jsonData = await response.json();
-    setUsers(jsonData.results);
-    setTotalPages(jsonData.total_pages);
-  } catch (error) {}
+    if (jsonData.detail) {
+      setPage(1);
+    } else {
+      setUsers(jsonData.results);
+      setTotalPages(jsonData.total_pages);
+    }
+  } catch (error) {
+    console.error("Error fetching user list:", error);
+  }
 }
+
 export async function BlockDeleteUsers(option, list) {
   let data;
   data = {

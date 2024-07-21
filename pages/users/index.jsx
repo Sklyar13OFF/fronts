@@ -25,7 +25,17 @@ export default function Users() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [option, setOption] = useState("BLOCK");
+  const [searchParam, setSearchParam] = useState("nickname");
+
   const [openedCritical, openCritical] = useState(false);
+
+  function handleSearch() {
+    if (searchText) {
+      setPage(1);
+    }
+    UsersList(setList, 1, setTotalPages, searchParam, searchText, setPage);
+  }
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const hours = date.getHours().toString().padStart(2, "0");
@@ -39,17 +49,16 @@ export default function Users() {
   };
 
   useEffect(() => {
-    UsersList(setList, page, setTotalPages);
+    UsersList(setList, page, setTotalPages, searchParam, searchText, setPage);
   }, [page]);
+
   const scrollPage = (next) => {
-    if (next == true) {
+    if (next === true) {
       setPage(page + 1);
     } else {
       setPage(page - 1);
     }
   };
-
-  const [searchParam, setSearchParam] = useState("username");
 
   const populateIdsList = (finrexId) => {
     setSelectedIds((prevSelectedIds) => {
@@ -60,10 +69,6 @@ export default function Users() {
       }
     });
   };
-
-  useEffect(() => {
-    console.log(selectedIds);
-  }, [selectedIds]);
 
   useEffect(() => {
     UsersInfo(setInfo);
@@ -139,92 +144,107 @@ export default function Users() {
               </div>
             )
           ) : (
-            <button className="w-[121px] h-10 bg-root-white rounded-xl text-prim font-bold">
+            <button
+              onClick={() => handleSearch()}
+              className="w-[121px] h-10 bg-root-white rounded-xl text-prim font-bold"
+            >
               Search
             </button>
           )}
         </div>
         <div className="flex flex-col gap-4 justify-center mt-5">
-          <table className="h-[380px] table-fixed">
-            <thead>
-              <tr className="h-[56px] mt-2">
-                <th></th>
-                <th className="text-gr font-normal text-left">Username</th>
-                <th className="text-gr font-normal text-left">E-Mail</th>
-                <th className="text-gr font-normal text-left">Phone</th>
-                <th className="text-gr font-normal text-left">Finrex-ID</th>
-                <th className="text-gr font-normal text-left">Joined</th>
-                <th className="text-gr font-normal text-left">Active</th>
-                <th className="text-gr font-normal text-left">Balance</th>
-              </tr>
-            </thead>
-            <tbody>
-              {list &&
-                list.length > 0 &&
-                list.map((item, index) => (
-                  <tr className="h-[56px]" key={index}>
-                    <td
-                      className="w-12"
-                      onClick={() => populateIdsList(item.internal_id)}
-                    >
-                      <CustomBox
-                        filled={selectedIds.includes(item.internal_id)}
-                      />
-                    </td>
-                    <td
-                      data-tooltip-id={`nick_${index}`}
-                      data-tooltip-content={item.nickname}
-                      className="text-light-gr max-w-[140px] w-[140px] truncate overflow-hidden text-ellipsis whitespace-nowrap pr-5"
-                    >
-                      {item.nickname}
-                    </td>
-                    <td
-                      data-tooltip-id={`email_${index}`}
-                      data-tooltip-content={item.email}
-                      className="text-light-gr max-w-[230px] w-[230px] truncate overflow-hidden text-ellipsis whitespace-nowrap pr-5"
-                    >
-                      {item.email}
-                    </td>
+          <div className="h-[350px]">
+            <table className="table-fixed ">
+              <thead>
+                <tr className="h-[56px]">
+                  <th className="w-12"></th>
+                  <th className="text-gr max-w-[140px] w-[140px] font-normal text-left">
+                    Nickname
+                  </th>
+                  <th className="text-gr font-normal text-left">E-Mail</th>
+                  <th className="text-gr font-normal text-left">Phone</th>
+                  <th className="text-gr font-normal text-left">Finrex-ID</th>
+                  <th className="text-gr font-normal text-left w-[140px]">
+                    Joined
+                  </th>
+                  <th className="text-gr font-normal text-left">Active</th>
+                  <th className="text-gr font-normal text-left">Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                {list &&
+                  list.length > 0 &&
+                  list.map((item, index) => (
+                    <tr className="h-[56px] w-full" key={index}>
+                      <td
+                        className="w-12 h-[56px]"
+                        onClick={() => populateIdsList(item.internal_id)}
+                      >
+                        <CustomBox
+                          filled={selectedIds.includes(item.internal_id)}
+                        />
+                      </td>
+                      <td
+                        data-tooltip-id={`nick_${index}`}
+                        data-tooltip-content={item.nickname}
+                        className="text-light-gr max-w-[140px] w-[140px] truncate overflow-hidden text-ellipsis whitespace-nowrap pr-5"
+                      >
+                        {item.nickname}
+                      </td>
+                      <td
+                        data-tooltip-id={`email_${index}`}
+                        data-tooltip-content={item.email}
+                        className="text-light-gr max-w-[230px] w-[230px] truncate overflow-hidden text-ellipsis whitespace-nowrap pr-5"
+                      >
+                        {item.email}
+                      </td>
 
-                    <td className="text-light-gr w-[177px]">{item.phone}</td>
-                    <td className="text-light-gr w-[240px]">
-                      {item.internal_id}
-                    </td>
-                    <td className="text-light-gr">
-                      {formatDate(item.date_joined)}
-                    </td>
-                    <td>
-                      {item.is_active ? (
-                        <div className="w-5 h-5 rounded-full bg-root-green" />
-                      ) : (
-                        <div className="w-5 h-5 rounded-full bg-root-red" />
-                      )}
-                    </td>
-                    <td className="text-root-green font-semibold">
-                      {parseFloat(item.total_money).toFixed(2)}
-                    </td>
-                    <Tooltip id={`email_${index}`} />
-                    <Tooltip id={`nick_${index}`} />
+                      <td className="text-light-gr w-[177px]">{item.phone}</td>
+                      <td className="text-light-gr w-[240px]">
+                        {item.internal_id}
+                      </td>
+                      <td className="text-light-gr w-[140px] pr-5">
+                        {formatDate(item.date_joined)}
+                      </td>
+                      <td className="w-[80px]">
+                        {item.is_active ? (
+                          <div className="w-5 h-5 rounded-full bg-root-green" />
+                        ) : (
+                          <div className="w-5 h-5 rounded-full bg-root-red" />
+                        )}
+                      </td>
+                      <td className="text-root-green font-semibold">
+                        {parseFloat(item.total_money).toFixed(2)}
+                      </td>
+                      <Tooltip id={`email_${index}`} />
+                      <Tooltip id={`nick_${index}`} />
+                    </tr>
+                  ))}
+                {list && list.length === 1 && (
+                  <tr className="h-[56px]">
+                    <td colSpan="8" className="h-[56px]"></td>
                   </tr>
-                ))}
-            </tbody>
-          </table>
+                )}
+              </tbody>
+            </table>
+          </div>
+
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
-                onClick={() => setSearchParam("username")}
+                onClick={() => setSearchParam("nickname")}
                 className={`px-4 py-2 rounded-xl flex flex-col items-center justify-center bg-white bg-opacity-10 ${
-                  searchParam == "username" ? "border-2 border-root-blue" : ""
+                  searchParam == "nickname" ? "border-2 border-root-blue" : ""
                 }`}
               >
                 <span
                   className={` font-medium  ${
-                    searchParam == "username"
+                    searchParam == "nickname"
                       ? "text-root-white"
                       : "text-light-gr"
                   }`}
                 >
-                  Username
+                  Nickname
                 </span>
               </button>
               <button
@@ -256,14 +276,16 @@ export default function Users() {
                 </span>
               </button>
               <button
-                onClick={() => setSearchParam("finrexID")}
+                onClick={() => setSearchParam("internal_id")}
                 className={`px-4 py-2 rounded-xl flex flex-col items-center justify-center bg-white bg-opacity-10 ${
-                  searchParam == "finrexID" ? "border-2 border-root-blue" : ""
+                  searchParam == "internal_id"
+                    ? "border-2 border-root-blue"
+                    : ""
                 }`}
               >
                 <span
                   className={` font-medium  ${
-                    searchParam == "finrexID"
+                    searchParam == "internal_id"
                       ? "text-root-white"
                       : "text-light-gr"
                   }`}
