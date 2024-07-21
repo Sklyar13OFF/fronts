@@ -5,6 +5,7 @@ import {
   UserStats,
   UsersList,
 } from "../../api/ApiWrapper";
+import { Tooltip } from "react-tooltip";
 import CriticalModal from "@/copytrading/CriticalModal";
 import { getServerSideProps as checkAuth } from "../../api/authCheck";
 import Image from "next/image";
@@ -144,7 +145,7 @@ export default function Users() {
           )}
         </div>
         <div className="flex flex-col gap-4 justify-center mt-5">
-          <table className="h-[380px]">
+          <table className="h-[380px] table-fixed">
             <thead>
               <tr className="h-[56px] mt-2">
                 <th></th>
@@ -153,6 +154,7 @@ export default function Users() {
                 <th className="text-gr font-normal text-left">Phone</th>
                 <th className="text-gr font-normal text-left">Finrex-ID</th>
                 <th className="text-gr font-normal text-left">Joined</th>
+                <th className="text-gr font-normal text-left">Active</th>
                 <th className="text-gr font-normal text-left">Balance</th>
               </tr>
             </thead>
@@ -169,16 +171,40 @@ export default function Users() {
                         filled={selectedIds.includes(item.internal_id)}
                       />
                     </td>
-                    <td className="text-light-gr">{item.nickname}</td>
-                    <td className="text-light-gr">{item.email}</td>
-                    <td className="text-light-gr">{item.phone}</td>
-                    <td className="text-light-gr">{item.internal_id}</td>
+                    <td
+                      data-tooltip-id={`nick_${index}`}
+                      data-tooltip-content={item.nickname}
+                      className="text-light-gr max-w-[140px] w-[140px] truncate overflow-hidden text-ellipsis whitespace-nowrap pr-5"
+                    >
+                      {item.nickname}
+                    </td>
+                    <td
+                      data-tooltip-id={`email_${index}`}
+                      data-tooltip-content={item.email}
+                      className="text-light-gr max-w-[230px] w-[230px] truncate overflow-hidden text-ellipsis whitespace-nowrap pr-5"
+                    >
+                      {item.email}
+                    </td>
+
+                    <td className="text-light-gr w-[177px]">{item.phone}</td>
+                    <td className="text-light-gr w-[240px]">
+                      {item.internal_id}
+                    </td>
                     <td className="text-light-gr">
                       {formatDate(item.date_joined)}
                     </td>
-                    <td className="text-root-green">
+                    <td>
+                      {item.is_active ? (
+                        <div className="w-5 h-5 rounded-full bg-root-green" />
+                      ) : (
+                        <div className="w-5 h-5 rounded-full bg-root-red" />
+                      )}
+                    </td>
+                    <td className="text-root-green font-semibold">
                       {parseFloat(item.total_money).toFixed(2)}
                     </td>
+                    <Tooltip id={`email_${index}`} />
+                    <Tooltip id={`nick_${index}`} />
                   </tr>
                 ))}
             </tbody>
