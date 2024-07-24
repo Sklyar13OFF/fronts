@@ -8,7 +8,7 @@ export default function ManagersTable() {
     GetManagers(setManagers);
   }, []);
   return (
-    <div className="bg-prim w-[1140px] rounded-xl flex flex-col px-5 py-3">
+    <div className="bg-prim w-[600px] rounded-xl flex flex-col px-5 py-3">
       <div className="flex items-center gap-4">
         <div className=" flex flex-col w-full gap-3">
           <div className="flex item-center justify-between w-full">

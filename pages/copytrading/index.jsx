@@ -11,17 +11,15 @@ import AddStrategyModal from "./AddStrategyModal";
 import { MyTraders } from "../../api/ApiWrapper";
 import LineChart from "./LineChart";
 import DoughnutChart from "./PieChartPerc";
-import { PieChartData } from "../../api/ApiWrapper";
 
 import { getServerSideProps as checkAuth } from "../../api/authCheck";
-import AddManagerModal from "./ManagerModal";
+import TradersBlock from "./traders/TradersBlock";
 import TradingStats from "./traders/TradingStats";
 export const getServerSideProps = async (context) => {
   return checkAuth(context);
 };
 export default function CopyTrading() {
   const [myInfo, setMyInfo] = useState({});
-  const traders = useSelector((state) => state.traders.value);
   const strategies = useSelector((state) => state.strategies.value);
   const stats = useSelector((state) => state.stats.value);
 
@@ -31,19 +29,25 @@ export default function CopyTrading() {
         <div className=" gap-5 flex-col md:flex-row flex  items-start justify-center">
           <div className="flex flex-col gap-5">
             <TradingStats />
-            <ManagersTable />
-
-            <div className="w-[600px] p-10 rounded-lg bg-prim">
-              {stats && (
-                <DoughnutChart rawData={stats.get_all_cryptos_in_percentage} />
-              )}
+            <div className="flex items-start gap-5">
+              <div className="flex flex-col gap-5">
+                <ManagersTable />
+                <div className="w-[600px] p-10 rounded-xl bg-prim">
+                  {stats && (
+                    <DoughnutChart
+                      rawData={stats.get_all_cryptos_in_percentage}
+                    />
+                  )}
+                </div>
+              </div>
+              <TradersBlock />
             </div>
           </div>
 
           <div className=" flex flex-col gap-10 items-center justify-center ">
             <div className="flex flex-col  w-[300px] h-[300px]">
               <AddTraderModal />
-              <div className="bg-[#142028] overflow-y-auto w-full h-full rounded-b-xl shadow-lg flex flex-col">
+              {/* <div className="bg-[#142028] overflow-y-auto w-full h-full rounded-b-xl shadow-lg flex flex-col">
                 {traders &&
                   traders.map((trader) => (
                     <TraderModal
@@ -61,7 +65,7 @@ export default function CopyTrading() {
                       deposits={trader.deposit}
                     />
                   ))}
-              </div>
+              </div> */}
             </div>
             <div className="flex flex-col  w-[300px] h-[360px]">
               <AddStrategyModal />
