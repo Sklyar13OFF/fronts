@@ -51,6 +51,10 @@ button:hover .icon {
   filter: brightness(0) saturate(100%) invert(27%) sepia(60%) saturate(2397%)
     hue-rotate(203deg) brightness(102%) contrast(98%);
 }
+.table-watch:hover img {
+  filter: brightness(0) saturate(100%) invert(27%) sepia(60%) saturate(2397%)
+    hue-rotate(203deg) brightness(102%) contrast(98%);
+}
 
 .content {
   margin-left: 220px;
@@ -554,36 +558,6 @@ input[type="checkbox"]:checked::before {
   background-color: #142028;
 }
 
-::-webkit-scrollbar {
-  width: 12px;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: darkblue;
-  /* color of the scrollbar thumb */
-}
-
-/* For Firefox */
-::-moz-scrollbar {
-  width: 6px;
-  /* width of the scrollbar */
-}
-
-::-moz-scrollbar-thumb {
-  background-color: #1f3645;
-  /* color of the scrollbar thumb */
-}
-
-/* For modern browsers supporting CSS Scrollbar Module Level 1 */
-/* This will set both the width and color of the scrollbar */
-/* Note: This property is not supported in Safari */
-body {
-  scrollbar-width: thin;
-  /* width of the scrollbar */
-  scrollbar-color: #1f3645 transparent;
-  /* color of the scrollbar thumb and track */
-}
-
 .editstrat-modal-overlay {
   position: fixed;
   top: 0;
@@ -693,12 +667,4 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .link {
   transition: all 0.4s ease-in-out;
-}
-
-.header {
-  position: fixed !important;
-  top: 0 !important;
-  width: 100% !important;
-  text-align: center !important;
-  z-index: 1000 !important;
 }

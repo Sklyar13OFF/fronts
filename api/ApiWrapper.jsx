@@ -45,6 +45,25 @@ export async function GetThreshold(setThres) {
     setThres(jsonData.min_copiers);
   } catch (error) {}
 }
+export async function GetManagers(setManagers) {
+  try {
+    const response = await fetch(
+      `https://finrex.com/v1/user/get_managers_list/?page=1`,
+      {
+        method: "GET",
+        headers: {
+          accept: "*/*",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const jsonData = await response.json();
+    setManagers(jsonData.results);
+  } catch (error) {}
+}
 export async function SetThreshold(threshold) {
   const logdata = {
     min_copiers: threshold,
@@ -264,6 +283,21 @@ export async function GetUserWallet(finrexID, setWallet) {
     );
     const jsonData = await response.json();
     setWallet(jsonData);
+  } catch (error) {}
+}
+export async function ManagersList(setManagers, page) {
+  try {
+    const response = await fetch(
+      `https://finrex.com/v1/user/get_managers_list/?page=${page}`,
+      {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+        },
+      }
+    );
+    const jsonData = await response.json();
+    setManagers(jsonData);
   } catch (error) {}
 }
 export async function BlockDeleteUsers(option, list) {
@@ -713,23 +747,6 @@ export async function EditTrader(
   }
 }
 
-export async function fetchIsAdmin(setIsAdm) {
-  try {
-    const response = await fetch(`${BASE_URL}auth/is_admin/`, {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Token ${getCookieValue("key")}`,
-      },
-    });
-    const data = await response.json();
-
-    setIsAdm(data.is_admin);
-  } catch (error) {
-    console.error("Error fetching isAdmin status:", error);
-  }
-}
 const replaceNaNWithZero = (inputValues) => {
   return inputValues.map((item) => ({
     ...item,
@@ -897,7 +914,7 @@ export async function ChangeProfitPerc(perc, id) {
 export function getCookieValue(cookieName, req = null) {
   let cookieValue = null;
 
-  // Server-side: Extract from request headers
+  // Server-side: Extract from request s
   if (req && req.headers.cookie) {
     const cookies = req.headers.cookie;
     const cookie = cookies
