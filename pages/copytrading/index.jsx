@@ -6,7 +6,6 @@ import StrategyModal from "./StrategyModal";
 import "../globals.css";
 import ManagersTable from "./managers/ManagersTable";
 import CopyModal from "./CopyModal";
-import AddTraderModal from "./AddTraderModal";
 import AddStrategyModal from "./AddStrategyModal";
 import { MyTraders } from "../../api/ApiWrapper";
 import LineChart from "./LineChart";
@@ -46,7 +45,6 @@ export default function CopyTrading() {
 
           <div className=" flex flex-col gap-10 items-center justify-center ">
             <div className="flex flex-col  w-[300px] h-[300px]">
-              <AddTraderModal />
               {/* <div className="bg-[#142028] overflow-y-auto w-full h-full rounded-b-xl shadow-lg flex flex-col">
                 {traders &&
                   traders.map((trader) => (

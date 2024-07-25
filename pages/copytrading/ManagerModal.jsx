@@ -3,7 +3,8 @@ import "../globals.css";
 import { AddManager } from "../../api/ApiWrapper";
 import Image from "next/image";
 import Modal from "react-modal";
-export default function AddManagerModal({}) {
+import { GetManagers } from "../../api/ApiWrapper";
+export default function AddManagerModal({ setManagers }) {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -12,6 +13,7 @@ export default function AddManagerModal({}) {
   const handleAddManager = async () => {
     await AddManager(name, email, photo);
     setIsOpen(false);
+    await GetManagers(setManagers);
   };
 
   const handleFileChange = (event) => {

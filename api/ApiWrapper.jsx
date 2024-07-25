@@ -64,6 +64,24 @@ export async function GetManagers(setManagers) {
     setManagers(jsonData.results);
   } catch (error) {}
 }
+export async function DeleteManager(id) {
+  try {
+    const response = await fetch(
+      `https://finrex.com/v1/user/delete_manager/${id}/`,
+      {
+        method: "DELETE",
+        headers: {
+          accept: "*/*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  } catch (error) {}
+}
 export async function SetThreshold(threshold) {
   const logdata = {
     min_copiers: threshold,
