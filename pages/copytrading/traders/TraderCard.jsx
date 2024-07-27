@@ -1,10 +1,34 @@
 import { useState } from "react";
+import EditTraderModal from "./EditTraderModal";
 import Image from "next/image";
 import DeleteTraderModal from "./DeleteTraderModal";
-export default function TraderCard({ photo, nickname, id }) {
+export default function TraderCard({
+  photo,
+  nickname,
+  id,
+  auto,
+  strategies,
+  visible,
+  about,
+  copiers,
+  max_copiers,
+}) {
   const [opened, open] = useState(false);
+  const [openedEdit, openEdit] = useState(false);
   return (
-    <div className="w-[235px] h-[300px] px-5 py-3  bg-white bg-opacity-10 rounded-xl">
+    <div className="w-[235px] h-[300px] px-5 py-3 flex flex-col justify-between bg-white bg-opacity-10 rounded-xl">
+      <EditTraderModal
+        id={id}
+        opened={openedEdit}
+        open={openEdit}
+        strategies={strategies}
+        auto={auto}
+        visible={visible}
+        nickname={nickname}
+        about={about}
+        maxcopiers={max_copiers}
+      />
+      <DeleteTraderModal opened={opened} open={open} id={id} />
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 ">
           <img src={photo} className="w-8 h-8 rounded-full" />
@@ -23,7 +47,12 @@ export default function TraderCard({ photo, nickname, id }) {
           className="cursor-pointer"
         />
       </div>
-      <DeleteTraderModal opened={opened} open={open} id={id} />
+      <button
+        onClick={() => openEdit(true)}
+        className="w-full font-medium bg-root-blue text-root-white rounded-lg h-10"
+      >
+        Edit
+      </button>
     </div>
   );
 }

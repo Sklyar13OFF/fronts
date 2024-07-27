@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import TraderModal from "./TraderModal";
+import TraderModal from "./traders/EditTraderModal";
 import "tailwindcss/tailwind.css";
 import { useSelector } from "react-redux";
 import StrategyModal from "./StrategyModal";
 import "../globals.css";
 import ManagersTable from "./managers/ManagersTable";
+import ManagersStats from "./managers/ManagersStats";
 import CopyModal from "./CopyModal";
 import AddStrategyModal from "./AddStrategyModal";
 import { MyTraders } from "../../api/ApiWrapper";
@@ -30,6 +31,17 @@ export default function CopyTrading() {
             <TradingStats />
             <div className="flex items-start gap-5">
               <div className="flex flex-col gap-5">
+                {stats && (
+                  <ManagersStats
+                    total_managers={stats.manager_stats.total_managers}
+                    users_w_managers={
+                      stats.manager_stats.user_with_managers_amount
+                    }
+                    users_wout_managers={
+                      stats.manager_stats.user_without_managers_amount
+                    }
+                  />
+                )}
                 <ManagersTable />
                 <div className="w-[600px] p-10 rounded-xl bg-prim">
                   {stats && (

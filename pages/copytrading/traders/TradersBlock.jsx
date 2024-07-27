@@ -27,6 +27,11 @@ export default function TradersBlock() {
                 photo={item.photo}
                 nickname={item.nickname}
                 id={item.id}
+                strategies={item.strategies}
+                visible={item.visible}
+                about={item.about}
+                auto={item.auto_trading}
+                max_copiers={item.max_copiers}
               />
             </div>
           ))}
