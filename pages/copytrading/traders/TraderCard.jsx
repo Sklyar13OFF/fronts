@@ -11,6 +11,7 @@ export default function TraderCard({
   visible,
   about,
   copiers,
+  trader_deposit,
   max_copiers,
 }) {
   const [opened, open] = useState(false);
@@ -26,6 +27,7 @@ export default function TraderCard({
         visible={visible}
         nickname={nickname}
         about={about}
+        trader_deposit={trader_deposit}
         maxcopiers={max_copiers}
       />
       <DeleteTraderModal opened={opened} open={open} id={id} />
