@@ -19,7 +19,7 @@ export default function TradersBlock() {
         </button>
       </div>
       <AddTraderModal open={open} opened={opened} />
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 max-h-[600px] overflow-y-auto overflow-x-hidden h-[600px] gap-3">
         {traders &&
           traders.map((item, index) => (
             <div key={index}>
