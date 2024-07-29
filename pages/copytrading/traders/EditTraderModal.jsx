@@ -18,7 +18,7 @@ export default function EditTraderModal({
   photo,
   copierscount,
   maxcopiers,
-  trader_deposit,
+  deposity,
   deposits,
   auto,
 }) {
@@ -27,7 +27,7 @@ export default function EditTraderModal({
   const [strategiesList, setStrategiesList] = useState(null);
   const [file, setFile] = useState("");
   const [maxCopiers, setMaxCopiersCount] = useState(maxcopiers);
-  const [deposit, setDeposit] = useState(trader_deposit);
+  const [deposit, setDeposit] = useState(deposity);
   const [username, setUsername] = useState(nickname);
   const [abouts, setAbouts] = useState(about);
   const [isVisible, setVisibility] = useState(visible);

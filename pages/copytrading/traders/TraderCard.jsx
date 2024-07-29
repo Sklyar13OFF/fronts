@@ -27,7 +27,7 @@ export default function TraderCard({
         visible={visible}
         nickname={nickname}
         about={about}
-        trader_deposit={trader_deposit}
+        deposity={trader_deposit}
         maxcopiers={max_copiers}
       />
       <DeleteTraderModal opened={opened} open={open} id={id} />
