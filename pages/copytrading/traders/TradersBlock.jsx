@@ -33,6 +33,8 @@ export default function TradersBlock() {
                 auto={item.auto_trading}
                 max_copiers={item.max_copiers}
                 trader_deposit={item.deposit}
+                aum={item.aum}
+                custom_aum={item.custom_aum}
               />
             </div>
           ))}

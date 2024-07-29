@@ -13,6 +13,8 @@ export default function TraderCard({
   copiers,
   trader_deposit,
   max_copiers,
+  aum,
+  custom_aum,
 }) {
   const [opened, open] = useState(false);
   const [openedEdit, openEdit] = useState(false);
@@ -29,6 +31,8 @@ export default function TraderCard({
         about={about}
         deposity={trader_deposit}
         maxcopiers={max_copiers}
+        aum={aum}
+        custom_aum={custom_aum}
       />
       <DeleteTraderModal opened={opened} open={open} id={id} />
       <div className="flex items-center justify-between">

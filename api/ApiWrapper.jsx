@@ -682,7 +682,8 @@ export async function EditTrader(
   maxcopiers,
   isVisible,
   deposit,
-  auto
+  auto,
+  custom_AUM
 ) {
   let textData;
   if (strategiess) {
@@ -698,6 +699,7 @@ export async function EditTrader(
       max_copiers: maxcopiers,
       visible: isVisible,
       auto_trading: auto,
+      custom_aum: custom_AUM,
     };
   } else {
     textData = {
@@ -708,6 +710,7 @@ export async function EditTrader(
       visible: isVisible,
       strategies_id: [],
       auto_trading: auto,
+      custom_aum: custom_AUM,
     };
   }
 

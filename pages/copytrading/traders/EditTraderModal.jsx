@@ -21,6 +21,8 @@ export default function EditTraderModal({
   deposity,
   deposits,
   auto,
+  aum,
+  custom_aum,
 }) {
   const dispatch = useDispatch();
   const [strategiess, setStrategies] = useState(strategies);
@@ -28,6 +30,7 @@ export default function EditTraderModal({
   const [file, setFile] = useState("");
   const [maxCopiers, setMaxCopiersCount] = useState(maxcopiers);
   const [deposit, setDeposit] = useState(deposity);
+  const [custom_AUM, setCustomAUM] = useState(custom_aum);
   const [username, setUsername] = useState(nickname);
   const [abouts, setAbouts] = useState(about);
   const [isVisible, setVisibility] = useState(visible);
@@ -86,7 +89,8 @@ export default function EditTraderModal({
     maxcopiers,
     isVisible,
     deposit,
-    isAuto
+    isAuto,
+    custom_AUM
   ) => {
     try {
       await EditTrader(
@@ -98,9 +102,9 @@ export default function EditTraderModal({
         maxcopiers,
         isVisible,
         deposit,
-        isAuto
+        isAuto,
+        custom_AUM
       );
-      await listAllTraders(dispatch, setTraders);
       await statsCopy(dispatch, setStats);
     } catch (error) {
       console.error("Error in handleSubmit:", error);
@@ -158,6 +162,23 @@ export default function EditTraderModal({
                   onChange={(event) => setMaxCopiersCount(event.target.value)}
                   className=" px-3 text-root-white text-xs font-semibold rounded-lg bg-root-input outline-none w-[170px] h-10"
                 />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-root-white text-xs font-semibold">
+                  AUM
+                </label>
+                <div className="flex items-center gap-1">
+                  <span className="text-root-white font-medium text-sm">
+                    {aum} +
+                  </span>
+                  <input
+                    className="outline-none h-10 w-[80px] rounded-lg bg-root-input px-1 text-sm text-root-green font-semibold placeholder:text-light-gr "
+                    type="text"
+                    placeholder="Custom AUM"
+                    value={custom_AUM}
+                    onChange={(event) => setCustomAUM(event.target.value)}
+                  />
+                </div>
               </div>
             </div>
             <div className="flex flex-col items-end gap-5">
@@ -290,7 +311,8 @@ export default function EditTraderModal({
                 maxCopiers,
                 isVisible,
                 deposit,
-                isAuto
+                isAuto,
+                custom_AUM
               )
             }
             className="w-[130px]  h-10 font-medium bg-root-blue rounded-lg text-root-white"
