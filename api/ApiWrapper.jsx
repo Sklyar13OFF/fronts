@@ -45,6 +45,27 @@ export async function GetThreshold(setThres) {
     setThres(jsonData.min_copiers);
   } catch (error) {}
 }
+export async function GetDetailInfo(finrexId, setInfo) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}auth/get_user_detail_info/?internal_id=${finrexId}`,
+      {
+        method: "GET",
+        headers: {
+          accept: "*/*",
+          "Content-Type": "application/json",
+          Authorization: `Token ${getCookieValue("key")}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const jsonData = await response.json();
+    setInfo(jsonData);
+  } catch (error) {}
+}
 export async function GetManagers(setManagers) {
   try {
     const response = await fetch(
@@ -302,6 +323,61 @@ export async function GetUserWallet(finrexID, setWallet) {
     const jsonData = await response.json();
     setWallet(jsonData);
   } catch (error) {}
+}
+export async function ChangeUserBal(internal_id, symbol, quantity) {
+  try {
+    const response = await fetch(`${BASE_URL}auth/change_user_balance/`, {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        Authorization: `Token ${getCookieValue("key")}`,
+        "Content-Type": "application/json", // Add this header
+      },
+      body: JSON.stringify({
+        internal_id,
+        symbol,
+        quantity: parseFloat(quantity).toFixed(7),
+      }), // Corrected the typo: Json to JSON
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const jsonData = await response.json();
+    return jsonData;
+  } catch (error) {
+    console.error("Error in ChangeUserBal:", error);
+    throw error;
+  }
+}
+export async function CreateUserBal(internal_id, symbol, quantity, network) {
+  try {
+    const response = await fetch(`${BASE_URL}auth/create_user_balance/`, {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        Authorization: `Token ${getCookieValue("key")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        internal_id,
+        symbol,
+        quantity: parseFloat(quantity).toFixed(7),
+        network,
+      }), // Corrected the typo: Json to JSON
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const jsonData = await response.json();
+    return jsonData;
+  } catch (error) {
+    console.error("Error in ChangeUserBal:", error);
+    throw error;
+  }
 }
 export async function ManagersList(setManagers, page) {
   try {

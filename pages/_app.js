@@ -83,15 +83,13 @@ function StrategiesUpdater() {
 export default function MyApp({ Component, pageProps }) {
   return (
     <Provider store={store}>
-      <div className="bg-[#0B1217]">
-        <SideBar />
+      <SideBar />
 
-        <TradersUpdater />
-        <StrategiesUpdater />
-        <StatsUpdater />
-        <AvailStrategiesUpdater />
-        <Component {...pageProps} />
-      </div>
+      <TradersUpdater />
+      <StrategiesUpdater />
+      <StatsUpdater />
+      <AvailStrategiesUpdater />
+      <Component {...pageProps} />
     </Provider>
   );
 }

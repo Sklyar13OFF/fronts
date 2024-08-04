@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import WalletModal from "@/copytrading/WalletModal";
 import {
   UsersInfo,
@@ -249,14 +250,15 @@ export default function Users() {
                         {parseFloat(item.total_money).toFixed(2)}
                       </td>
                       <td>
-                        <button onClick={() => eyeClick(item.internal_id)}>
-                          {" "}
-                          <Image
-                            className="cursor-pointer icon"
-                            src="/assets/icons/eye.svg"
-                            width={24}
-                            height={24}
-                          />
+                        <button>
+                          <Link href={`/user_info?id=${item.internal_id}`}>
+                            <Image
+                              className="cursor-pointer icon"
+                              src="/assets/icons/eye.svg"
+                              width={24}
+                              height={24}
+                            />
+                          </Link>
                         </button>
                       </td>
                       <Tooltip id={`email_${index}`} />
