@@ -11,7 +11,7 @@ export default function RankLabel({ rank }) {
   return (
     <div
       className={`  h-4 flex flex-col items-center justify-center rounded-[5px] ${
-        rankDict[rank.toUpperCase()]
+        rank && rankDict[rank.toUpperCase()]
       }`}
     >
       <span className="upper text-bkg font-bold text-xs px-1">{rank}</span>
