@@ -126,7 +126,7 @@ const UserInfo = () => {
                             <h5 className="text-root-white font-semibold text-xl">
                               {info.user_info.nickname}
                             </h5>
-                            {info.user_settings && (
+                            {info.user_settings.rank && (
                               <RankLabel rank={info.user_settings.rank} />
                             )}
                           </div>
