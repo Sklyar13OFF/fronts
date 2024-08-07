@@ -88,7 +88,6 @@ export default function StrategyModal({ depos, custom, current_copiers, name, mi
                 
                     await EditStrategy(copiersCount, naming, abouts, maxDepos, minDepos, id, depositAmounts,leftform, copiers);
                     await statsCopy(dispatch, setStats);
-                    window.location.reload()
             } catch (error) {
                 console.error('Error occurred:', error);
             }
